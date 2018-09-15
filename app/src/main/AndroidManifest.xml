@@ -19,7 +19,10 @@
         <activity
             android:name=".AdminLoginActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".PatientManagementActivity"></activity>
+        <activity android:name=".PatientManagementActivity" />
+        <activity
+            android:name=".AddPatientActivity"
+            android:parentActivityName=".PatientManagementActivity"></activity>
     </application>
 
 </manifest>
