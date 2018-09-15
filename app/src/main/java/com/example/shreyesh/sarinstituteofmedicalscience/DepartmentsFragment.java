@@ -44,7 +44,7 @@ public class DepartmentsFragment extends Fragment {
         departmentRecyclerView.setAdapter(departmentsAdapter);
 
 
-        departmentsList.add(new Departments("Hello", "Hey"));
+        departmentsList.add(new Departments("Department of Cardiology", "Hey"));
 
 
         return view;

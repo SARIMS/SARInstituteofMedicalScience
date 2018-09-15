@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
                 break;
             case R.id.aboutUs:
+                startActivity(new Intent(MainActivity.this, PatientManagementActivity.class));
                 break;
             default:
                 Toast.makeText(MainActivity.this, "Invalid Option", Toast.LENGTH_LONG).show();

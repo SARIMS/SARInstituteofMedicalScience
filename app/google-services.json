@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "675989966788",
+    "firebase_url": "https://sarinstituteofmedicalscience.firebaseio.com",
+    "project_id": "sarinstituteofmedicalscience",
+    "storage_bucket": "sarinstituteofmedicalscience.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675989966788:android:4fbcff1a8790cda1",
+        "android_client_info": {
+          "package_name": "com.example.shreyesh.sarinstituteofmedicalscience"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675989966788-hd54315ubohb56gkrr7l9efmjoe4nv17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shreyesh.sarinstituteofmedicalscience",
+            "certificate_hash": "c80f9d546705275f6393dd9e8712d87290eff47d"
+          }
+        },
+        {
+          "client_id": "675989966788-upqs93q1hpajmf8r3m7c07smbff6d57t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMGbkWrZcwEdtwkH1AKF0If9tHzOwQ1zM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675989966788-upqs93q1hpajmf8r3m7c07smbff6d57t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
