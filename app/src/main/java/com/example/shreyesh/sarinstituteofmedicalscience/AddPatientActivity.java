@@ -28,11 +28,12 @@ public class AddPatientActivity extends AppCompatActivity {
 
 
     private TextInputLayout patientName, patientEmail, patientPassword, patientConfirmPassword, patientPhone, patientAge;
+    private TextInputLayout patientAddress, patientNationality, patientTreatmentNeeded, patientDepartmentToVisit;
     private Button registerPatient, reset;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference patientRef;
-    private RadioButton maleButton, femaleButton;
-    private RadioGroup genderGroup;
+    private RadioButton maleButton, femaleButton, inpatientButton, outPatient;
+    private RadioGroup genderGroup, patientTypeGroup;
     private Toolbar addPatientToolbar;
     private ProgressDialog progressDialog;
 
@@ -47,11 +48,19 @@ public class AddPatientActivity extends AppCompatActivity {
         patientEmail = (TextInputLayout) findViewById(R.id.patientEmail);
         patientName = (TextInputLayout) findViewById(R.id.patientName);
         patientPhone = (TextInputLayout) findViewById(R.id.patientPhone);
+        patientNationality = (TextInputLayout) findViewById(R.id.patientNationality);
+        patientAddress = (TextInputLayout) findViewById(R.id.patientAddress);
+        patientTreatmentNeeded = (TextInputLayout) findViewById(R.id.patientTreatmentNeeded);
+        patientDepartmentToVisit = (TextInputLayout) findViewById(R.id.patientDepartment);
         patientPassword = (TextInputLayout) findViewById(R.id.patientPassword);
         maleButton = (RadioButton) findViewById(R.id.maleRadioButton);
+        inpatientButton = (RadioButton) findViewById(R.id.inPaientRadioButton);
+        outPatient = (RadioButton) findViewById(R.id.Outpatient);
+        patientTypeGroup = (RadioGroup) findViewById(R.id.patientTypeRadioGroup);
         femaleButton = (RadioButton) findViewById(R.id.femaleRadioButton);
         genderGroup = (RadioGroup) findViewById(R.id.genderRadioGroup);
         genderGroup.clearCheck();
+        patientTypeGroup.clearCheck();
         addPatientToolbar = (Toolbar) findViewById(R.id.addPatientToolbar);
         setSupportActionBar(addPatientToolbar);
         getSupportActionBar().setTitle("Add Patient");
@@ -82,6 +91,17 @@ public class AddPatientActivity extends AppCompatActivity {
             }
         });
 
+        patientTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                RadioButton rb = (RadioButton) radioGroup.findViewById(i);
+                if (rb.getText().equals("Inpatient")) {
+                    patientTreatmentNeeded.setVisibility(View.VISIBLE);
+                } else {
+                    patientTreatmentNeeded.setVisibility(View.GONE);
+                }
+            }
+        });
 
         registerPatient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +113,12 @@ public class AddPatientActivity extends AppCompatActivity {
                 final String pPassword = patientPassword.getEditText().getText().toString();
                 String pConfirmPassword = patientConfirmPassword.getEditText().getText().toString();
                 final String pEmail = patientEmail.getEditText().getText().toString();
+                final String pAddress = patientAddress.getEditText().getText().toString();
+                final String pNationality = patientNationality.getEditText().getText().toString();
+                final String pDepartment = patientDepartmentToVisit.getEditText().getText().toString();
+                final String pTreatment = patientTreatmentNeeded.getEditText().getText().toString();
 
-                if (TextUtils.isEmpty(pAge) || TextUtils.isEmpty(pName) || TextUtils.isEmpty(pPhone) || TextUtils.isEmpty(pPassword) || TextUtils.isEmpty(pConfirmPassword) || TextUtils.isEmpty(pEmail)) {
+                if (TextUtils.isEmpty(pAge) || TextUtils.isEmpty(pName) || TextUtils.isEmpty(pPhone) || TextUtils.isEmpty(pPassword) || TextUtils.isEmpty(pConfirmPassword) || TextUtils.isEmpty(pEmail) || TextUtils.isEmpty(pAddress) || TextUtils.isEmpty(pNationality) || TextUtils.isEmpty(pDepartment)) {
                     Toast.makeText(AddPatientActivity.this, "Please fill details", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -115,41 +139,83 @@ public class AddPatientActivity extends AppCompatActivity {
                     Toast.makeText(AddPatientActivity.this, "Please select gender", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (!inpatientButton.isChecked() && !outPatient.isChecked()) {
+                    Toast.makeText(AddPatientActivity.this, "Please select patient Type", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 RadioButton rb = (RadioButton) genderGroup.findViewById(genderGroup.getCheckedRadioButtonId());
                 final String g = rb.getText().toString();
+                RadioButton radioButton = (RadioButton) patientTypeGroup.findViewById(patientTypeGroup.getCheckedRadioButtonId());
+                final String type = radioButton.getText().toString();
                 progressDialog.show();
                 firebaseAuth.createUserWithEmailAndPassword(pEmail, pPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if (BedCount.blist.size() >= 600 && type.equals("Inpatient")) {
+                                Toast.makeText(AddPatientActivity.this, "Bed Not Available", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            String bno = Integer.toString(++BedCount.bCount);
+                            BedCount.blist.add(Integer.parseInt(bno));
                             String uid = firebaseAuth.getCurrentUser().getUid();
-                            HashMap<String, String> patientMap = new HashMap();
-                            patientMap.put("name", pName);
-                            patientMap.put("age", pAge);
-                            patientMap.put("gender", g);
-                            patientMap.put("phone", pPhone);
-                            patientMap.put("image", "default");
-
-                            patientRef.child(uid).setValue(patientMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(AddPatientActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(AddPatientActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                        progressDialog.hide();
+                            DatabaseReference patientTypeRef;
+                            if (type.equals("Outpatient")) {
+                                patientTypeRef = patientRef.child("outpatients");
+                                HashMap<String, String> patientMap = new HashMap();
+                                patientMap.put("name", pName);
+                                patientMap.put("age", pAge);
+                                patientMap.put("gender", g);
+                                patientMap.put("phone", pPhone);
+                                patientMap.put("image", "default");
+                                patientMap.put("address", pAddress);
+                                patientMap.put("nationality", pNationality);
+                                patientMap.put("department", pDepartment);
+                                patientTypeRef.child(uid).setValue(patientMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(AddPatientActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(AddPatientActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            progressDialog.hide();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                patientTypeRef = patientRef.child("inpatients");
+                                HashMap<String, String> patientMap = new HashMap();
+                                patientMap.put("name", pName);
+                                patientMap.put("age", pAge);
+                                patientMap.put("gender", g);
+                                patientMap.put("phone", pPhone);
+                                patientMap.put("image", "default");
+                                patientMap.put("address", pAddress);
+                                patientMap.put("nationality", pNationality);
+                                patientMap.put("department", pDepartment);
+                                patientMap.put("treatment", pTreatment);
+                                patientTypeRef.child(uid).setValue(patientMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(AddPatientActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(AddPatientActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            progressDialog.hide();
+                                        }
+                                    }
+                                });
+                            }
+
                         } else {
                             Toast.makeText(AddPatientActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             progressDialog.hide();
                         }
                     }
                 });
-
             }
         });
 

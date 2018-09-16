@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -22,7 +24,9 @@ public class PatientManagementActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView patientRecyclerView;
     private TextView emptyText;
-    private DatabaseReference patientRef;
+    private DatabaseReference patientRef, inRef, outRef;
+    private RadioGroup radioGroup;
+    private RadioButton inpatient, outpatient;
     private FloatingActionButton addPatient;
 
     @Override
@@ -32,9 +36,16 @@ public class PatientManagementActivity extends AppCompatActivity {
 
         //Initialize
         patientRef = FirebaseDatabase.getInstance().getReference().child("patients");
+        inRef = FirebaseDatabase.getInstance().getReference().child("patients").child("inpatients");
+        outRef = FirebaseDatabase.getInstance().getReference().child("patients").child("outpatients");
         toolbar = (Toolbar) findViewById(R.id.PatientManagementToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Patient Management");
+
+        radioGroup = (RadioGroup) findViewById(R.id.patientTypeRBFilter);
+        inpatient = (RadioButton) findViewById(R.id.inpatientRBFilter);
+        outpatient = (RadioButton) findViewById(R.id.outpatientRBFilter);
+        radioGroup.check(R.id.inpatientRBFilter);
 
         patientRecyclerView = (RecyclerView) findViewById(R.id.patientList);
         patientRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -58,25 +69,98 @@ public class PatientManagementActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
-                Patient.class,
-                R.layout.patient_single_layout,
-                PatientViewHolder.class,
-                patientRef
-
-        ) {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            protected void populateViewHolder(PatientViewHolder viewHolder, Patient model, int position) {
-                viewHolder.setName(model.getName());
-                viewHolder.setAge(model.getAge());
-                viewHolder.setSex(model.getGender());
-            }
-        };
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                RadioButton rb = (RadioButton) radioGroup.findViewById(i);
+                if (rb.getText().equals("Inpatient")) {
+                    inRef = patientRef.child("inpatients");
+                    FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
+                            Patient.class,
+                            R.layout.patient_single_layout,
+                            PatientViewHolder.class,
+                            inRef
 
-        firebaseRecyclerAdapter.notifyDataSetChanged();
-        patientRecyclerView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
+                    ) {
+                        @Override
+                        protected void populateViewHolder(PatientViewHolder viewHolder, Patient model, int position) {
+                            viewHolder.setName(model.getName());
+                            viewHolder.setAge(model.getAge());
+                            viewHolder.setSex(model.getGender());
+                        }
+                    };
+
+
+                    firebaseRecyclerAdapter.notifyDataSetChanged();
+                    patientRecyclerView.setAdapter(firebaseRecyclerAdapter);
+                    firebaseRecyclerAdapter.startListening();
+                } else if (rb.getText().equals("Outpatient")) {
+                    outRef = patientRef.child("outpatients");
+                    FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
+                            Patient.class,
+                            R.layout.patient_single_layout,
+                            PatientViewHolder.class,
+                            outRef
+
+                    ) {
+                        @Override
+                        protected void populateViewHolder(PatientViewHolder viewHolder, Patient model, int position) {
+                            viewHolder.setName(model.getName());
+                            viewHolder.setAge(model.getAge());
+                            viewHolder.setSex(model.getGender());
+                        }
+                    };
+
+
+                    firebaseRecyclerAdapter.notifyDataSetChanged();
+                    patientRecyclerView.setAdapter(firebaseRecyclerAdapter);
+                    firebaseRecyclerAdapter.startListening();
+                }
+            }
+        });
+
+        RadioButton rb = (RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
+        if (rb.getText().equals("Inpatient")) {
+            inRef = patientRef.child("inpatients");
+            FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
+                    Patient.class,
+                    R.layout.patient_single_layout,
+                    PatientViewHolder.class,
+                    inRef
+
+            ) {
+                @Override
+                protected void populateViewHolder(PatientViewHolder viewHolder, Patient model, int position) {
+                    viewHolder.setName(model.getName());
+                    viewHolder.setAge(model.getAge());
+                    viewHolder.setSex(model.getGender());
+                }
+            };
+
+
+            firebaseRecyclerAdapter.notifyDataSetChanged();
+            patientRecyclerView.setAdapter(firebaseRecyclerAdapter);
+            firebaseRecyclerAdapter.startListening();
+        } else if (rb.getText().equals("Outpatient")) {
+            outRef = patientRef.child("outpatients");
+            FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
+                    Patient.class,
+                    R.layout.patient_single_layout,
+                    PatientViewHolder.class,
+                    outRef
+
+            ) {
+                @Override
+                protected void populateViewHolder(PatientViewHolder viewHolder, Patient model, int position) {
+                    viewHolder.setName(model.getName());
+                    viewHolder.setAge(model.getAge());
+                    viewHolder.setSex(model.getGender());
+                }
+            };
+            firebaseRecyclerAdapter.notifyDataSetChanged();
+            patientRecyclerView.setAdapter(firebaseRecyclerAdapter);
+            firebaseRecyclerAdapter.startListening();
+        }
     }
 
     public static class PatientViewHolder extends RecyclerView.ViewHolder {
