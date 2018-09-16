@@ -2,18 +2,10 @@ package com.example.shreyesh.sarinstituteofmedicalscience;
 
 public class Patient {
 
-    private String name, age, sex, room, phone;
+    private String name, age, gender, room, phone;
     private String image;
 
     public Patient() {
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public String getName() {
@@ -32,12 +24,12 @@ public class Patient {
         this.age = age;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getRoom() {
@@ -54,5 +46,13 @@ public class Patient {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -129,6 +129,7 @@ public class AddPatientActivity extends AppCompatActivity {
                             patientMap.put("age", pAge);
                             patientMap.put("gender", g);
                             patientMap.put("phone", pPhone);
+                            patientMap.put("image", "default");
 
                             patientRef.child(uid).setValue(patientMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

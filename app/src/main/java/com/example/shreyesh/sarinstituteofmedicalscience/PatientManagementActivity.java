@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -22,7 +23,6 @@ public class PatientManagementActivity extends AppCompatActivity {
     private RecyclerView patientRecyclerView;
     private TextView emptyText;
     private DatabaseReference patientRef;
-    private FirebaseDatabase firebaseDatabase;
     private FloatingActionButton addPatient;
 
     @Override
@@ -31,14 +31,19 @@ public class PatientManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_patient_management);
 
         //Initialize
+        patientRef = FirebaseDatabase.getInstance().getReference().child("patients");
         toolbar = (Toolbar) findViewById(R.id.PatientManagementToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Patient Management");
+
         patientRecyclerView = (RecyclerView) findViewById(R.id.patientList);
+        patientRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
         emptyText = (TextView) findViewById(R.id.emptyListTextView);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        patientRef = firebaseDatabase.getReference().child("patients");
+
         addPatient = (FloatingActionButton) findViewById(R.id.addPatient);
+
+        patientRef.keepSynced(true);
 
         addPatient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +68,15 @@ public class PatientManagementActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(PatientViewHolder viewHolder, Patient model, int position) {
-
+                viewHolder.setName(model.getName());
+                viewHolder.setAge(model.getAge());
+                viewHolder.setSex(model.getGender());
             }
         };
+
+        firebaseRecyclerAdapter.notifyDataSetChanged();
+        patientRecyclerView.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
     }
 
     public static class PatientViewHolder extends RecyclerView.ViewHolder {
