@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/patientManange"
+        android:icon="@drawable/baseline_person_add_black_18dp"
+        android:title="Patient Management">
+
+    </item>
+    <item
+        android:id="@+id/doctorManage"
+        android:icon="@drawable/baseline_person_add_black_18dp"
+        android:title="Doctor Management"></item>
+    <item
+        android:id="@+id/adminLogOut"
+        android:icon="@drawable/logout"
+        android:title="Log Out" />
+</menu>
