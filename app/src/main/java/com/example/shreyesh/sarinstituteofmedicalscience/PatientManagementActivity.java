@@ -72,7 +72,7 @@ public class PatientManagementActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                RadioButton rb = (RadioButton) radioGroup.findViewById(i);
+                final RadioButton rb = (RadioButton) radioGroup.findViewById(i);
                 if (rb.getText().equals("Inpatient")) {
                     inRef = patientRef.child("inpatients");
                     FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
@@ -87,6 +87,18 @@ public class PatientManagementActivity extends AppCompatActivity {
                             viewHolder.setName(model.getName());
                             viewHolder.setAge(model.getAge());
                             viewHolder.setSex(model.getGender());
+
+                            final String uid = getRef(position).getKey();
+
+                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(PatientManagementActivity.this, PatientDetailsActivtity.class);
+                                    intent.putExtra("type", "inpatients");
+                                    intent.putExtra("userID", uid);
+                                    startActivity(intent);
+                                }
+                            });
                         }
                     };
 
@@ -108,6 +120,18 @@ public class PatientManagementActivity extends AppCompatActivity {
                             viewHolder.setName(model.getName());
                             viewHolder.setAge(model.getAge());
                             viewHolder.setSex(model.getGender());
+
+                            final String uid = getRef(position).getKey();
+
+                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(PatientManagementActivity.this, PatientDetailsActivtity.class);
+                                    intent.putExtra("type", "outpatients");
+                                    intent.putExtra("userID", uid);
+                                    startActivity(intent);
+                                }
+                            });
                         }
                     };
 
@@ -119,7 +143,7 @@ public class PatientManagementActivity extends AppCompatActivity {
             }
         });
 
-        RadioButton rb = (RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
+        final RadioButton rb = (RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb.getText().equals("Inpatient")) {
             inRef = patientRef.child("inpatients");
             FirebaseRecyclerAdapter<Patient, PatientViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Patient, PatientViewHolder>(
@@ -134,6 +158,18 @@ public class PatientManagementActivity extends AppCompatActivity {
                     viewHolder.setName(model.getName());
                     viewHolder.setAge(model.getAge());
                     viewHolder.setSex(model.getGender());
+
+                    final String uid = getRef(position).getKey();
+
+                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(PatientManagementActivity.this, PatientDetailsActivtity.class);
+                            intent.putExtra("type", "inpatients");
+                            intent.putExtra("userID", uid);
+                            startActivity(intent);
+                        }
+                    });
                 }
             };
 
@@ -155,6 +191,18 @@ public class PatientManagementActivity extends AppCompatActivity {
                     viewHolder.setName(model.getName());
                     viewHolder.setAge(model.getAge());
                     viewHolder.setSex(model.getGender());
+
+                    final String uid = getRef(position).getKey();
+
+                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(PatientManagementActivity.this, PatientDetailsActivtity.class);
+                            intent.putExtra("type", "outpatients");
+                            intent.putExtra("userID", uid);
+                            startActivity(intent);
+                        }
+                    });
                 }
             };
             firebaseRecyclerAdapter.notifyDataSetChanged();
