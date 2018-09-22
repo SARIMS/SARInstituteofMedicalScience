@@ -31,7 +31,10 @@
         <activity
             android:name=".PatientDetailsActivtity"
             android:parentActivityName=".PatientManagementActivity" />
-        <activity android:name=".AdminHomeActivity"></activity>
+        <activity android:name=".AdminHomeActivity" />
+        <activity
+            android:name=".AddNoticeActivity"
+            android:parentActivityName=".AdminHomeActivity"></activity>
     </application>
 
 </manifest>
