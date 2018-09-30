@@ -1,6 +1,7 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class AddNoticeActivity extends AppCompatActivity {
 
     private DatabaseReference noticeRef;
     private Toolbar addNoticeToolbar;
+    private ProgressDialog progressDialog;
     private Button postNotice;
     private EditText noticeDate, noticeTitle, noticeBody;
     private Calendar myCalender = Calendar.getInstance();
@@ -37,6 +39,10 @@ public class AddNoticeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_notice);
 
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Adding Notice");
+        progressDialog.setMessage("Please wait while we add your notice...");
+        progressDialog.setCanceledOnTouchOutside(false);
         noticeDate = (EditText) findViewById(R.id.noticeDate);
         noticeBody = (EditText) findViewById(R.id.noticeBody);
         noticeTitle = (EditText) findViewById(R.id.noticeTitle);
@@ -81,6 +87,7 @@ public class AddNoticeActivity extends AppCompatActivity {
                     return;
                 }
 
+                progressDialog.show();
                 HashMap<String, String> noticeMap = new HashMap<>();
                 noticeMap.put("date", date);
                 noticeMap.put("title", title);
@@ -90,9 +97,11 @@ public class AddNoticeActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            progressDialog.dismiss();
                             Toast.makeText(AddNoticeActivity.this, "Notice added succesfully", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(AddNoticeActivity.this, AdminHomeActivity.class));
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(AddNoticeActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }

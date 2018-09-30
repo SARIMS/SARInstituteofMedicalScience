@@ -1,5 +1,7 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +41,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
     private TextView inpatientCount, outpatientCount, doctorCount;
     private DatabaseReference ipref, oref, noticeRef;
     private RecyclerView adminNoticeList;
+
 
 
     @Override
@@ -116,8 +121,9 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
 
                 viewHolder.setNoticeDate(model.getDate());
                 viewHolder.setNoticeTitle(model.getTitle());
+                adminNoticeList.setLongClickable(true);
 
-                String id = getRef(position).getKey();
+                final String id = getRef(position).getKey();
                 final Intent intent = new Intent(AdminHomeActivity.this, ViewNoticeActivity.class);
                 intent.putExtra("id", id);
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +132,34 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
                         startActivity(intent);
                     }
                 });
+
+                viewHolder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AdminHomeActivity.this);
+                        builder.setMessage("Delete Notice");
+                        builder.setTitle("Are you sure you want to delele this ?");
+                        builder.setIcon(R.drawable.baseline_delete_black_18dp);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                noticeRef.child(id).removeValue();
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        builder.create().show();
+
+                        return true;
+                    }
+                });
+
 
 
             }
@@ -170,6 +204,9 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
     public static class NoticeViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
+        Activity a;
+        DatabaseReference nRef;
+        String id;
 
         public NoticeViewHolder(View itemView) {
             super(itemView);
@@ -186,6 +223,40 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
             ndate.setText(date);
         }
 
+        public void setA(Activity a, DatabaseReference ref, String id) {
+            this.a = a;
+            this.nRef = ref;
+            this.id = id;
+        }
 
+        //   @Override
+        /*public boolean onLongClick(View view) {
+
+            messageDialog();
+            Toast.makeText(a,"You",Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        public void messageDialog(){
+
+            AlertDialog.Builder builder=new AlertDialog.Builder(a);
+            builder.setMessage("Delete Notice");
+            builder.setTitle("Are you sure you want to delele this ?");
+            builder.setIcon(R.drawable.baseline_delete_black_18dp);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    nRef.child(id).removeValue();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            builder.create().show();
+
+        }*/
     }
 }
