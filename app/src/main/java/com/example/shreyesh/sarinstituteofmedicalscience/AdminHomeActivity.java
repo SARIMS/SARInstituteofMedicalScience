@@ -117,6 +117,17 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
                 viewHolder.setNoticeDate(model.getDate());
                 viewHolder.setNoticeTitle(model.getTitle());
 
+                String id = getRef(position).getKey();
+                final Intent intent = new Intent(AdminHomeActivity.this, ViewNoticeActivity.class);
+                intent.putExtra("id", id);
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(intent);
+                    }
+                });
+
+
             }
         };
 
@@ -150,6 +161,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
             case R.id.patientManange:
                 startActivity(new Intent(AdminHomeActivity.this, PatientManagementActivity.class));
             case R.id.adminLogOut:
+                FirebaseAuth.getInstance().signOut();
 
         }
         return true;

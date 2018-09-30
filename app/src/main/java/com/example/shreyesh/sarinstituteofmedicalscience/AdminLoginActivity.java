@@ -79,7 +79,7 @@ public class AdminLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressDialog.dismiss();
-                            startActivity(new Intent(AdminLoginActivity.this, PatientManagementActivity.class));
+                            startActivity(new Intent(AdminLoginActivity.this, AdminHomeActivity.class));
                             finish();
                         } else {
                             progressDialog.hide();
