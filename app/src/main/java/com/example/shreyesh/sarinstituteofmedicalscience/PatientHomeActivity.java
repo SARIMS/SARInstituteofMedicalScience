@@ -1,5 +1,6 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -76,8 +78,13 @@ public class PatientHomeActivity extends AppCompatActivity
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("name").getValue().toString();
-                patientHeaderName.setText(name);
+                if (dataSnapshot.exists()) {
+                    String name = dataSnapshot.child("name").getValue().toString();
+                    patientHeaderName.setText(name);
+                } else {
+                    Toast.makeText(PatientHomeActivity.this, "Wrong Patient Type", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));
+                }
 
             }
 
@@ -122,7 +129,9 @@ public class PatientHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.patientLogOut) {
+            firebaseAuth.signOut();
+            startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));
             return true;
         }
 
