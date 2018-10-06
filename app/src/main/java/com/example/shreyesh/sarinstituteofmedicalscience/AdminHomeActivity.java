@@ -38,7 +38,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
     private Toolbar adminToolbar;
     private ActionBar actionBar;
     private NavigationView navigationView;
-    private TextView inpatientCount, outpatientCount, doctorCount;
+    private TextView inpatientCount, outpatientCount, doctorCount, empty;
     private DatabaseReference ipref, oref, noticeRef;
     private RecyclerView adminNoticeList;
 
@@ -49,7 +49,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
 
-
+        empty = (TextView) findViewById(R.id.emptyText);
         adminToolbar = (Toolbar) findViewById(R.id.adminHomeToolbar);
         setSupportActionBar(adminToolbar);
         actionBar = getSupportActionBar();
@@ -159,9 +159,6 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
                         return true;
                     }
                 });
-
-
-
             }
         };
 

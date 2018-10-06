@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navDocSchedule"
+            android:icon="@drawable/baseline_schedule_black_18dp"
+            android:title="Schedule Appointment" />
+        <item
+            android:id="@+id/navRequestService"
+            android:icon="@drawable/health"
+            android:title="Request Service" />
+        <item
+            android:id="@+id/navBills"
+            android:icon="@drawable/bill"
+            android:title="View Bills" />
+        <item
+            android:id="@+id/navSettings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Account Settings" />
+    </group>
+</menu>

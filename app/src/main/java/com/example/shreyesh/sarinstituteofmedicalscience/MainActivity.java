@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
                 break;
             case R.id.aboutUs:
-                startActivity(new Intent(MainActivity.this, AdminHomeActivity.class));
+                startActivity(new Intent(MainActivity.this, PatientHomeActivity.class));
+                break;
+            case R.id.patientRedirect:
+                startActivity(new Intent(MainActivity.this, PatientLoginActivity.class));
                 break;
             default:
                 Toast.makeText(MainActivity.this, "Invalid Option", Toast.LENGTH_LONG).show();

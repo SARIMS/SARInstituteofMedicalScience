@@ -6,6 +6,9 @@
         android:id="@+id/adminRedirect"
         android:title="Admin Login" />
     <item
+        android:id="@+id/patientRedirect"
+        android:title="Patient Login" />
+    <item
         android:id="@+id/aboutUs"
         android:title="About Us" />
 </menu>

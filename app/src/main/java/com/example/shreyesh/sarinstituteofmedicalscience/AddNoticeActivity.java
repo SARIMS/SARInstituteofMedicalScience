@@ -108,7 +108,6 @@ public class AddNoticeActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
 
     private void updateLabel() {
