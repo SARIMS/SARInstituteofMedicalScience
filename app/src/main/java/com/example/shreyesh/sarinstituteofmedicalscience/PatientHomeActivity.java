@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,30 +15,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.Console;
 
 public class PatientHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView patientHomeReportsList;
-    private DatabaseReference reportsRef;
+    private DatabaseReference reportsRef, userRef;
+    private FirebaseAuth firebaseAuth;
+    private TextView patientHeaderEmail, patientHeaderName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_home);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.patientHomeToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Patient Home");
 
 
-        //String userid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //reportsRef=FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
-        patientHomeReportsList = (RecyclerView) findViewById(R.id.patientHomeReportList);
-        patientHomeReportsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        String type = getIntent().getStringExtra("type");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,6 +54,47 @@ public class PatientHomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        patientHeaderEmail = (TextView) headerView.findViewById(R.id.patientHeaderEmail);
+        patientHeaderName = (TextView) headerView.findViewById(R.id.patientHeaderName);
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        String userid = firebaseAuth.getCurrentUser().getUid();
+        String email = firebaseAuth.getCurrentUser().getEmail();
+
+
+        if (firebaseAuth != null) {
+
+            patientHeaderEmail.setText(email);
+        }
+
+        reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
+        userRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type).child(userid);
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("name").getValue().toString();
+                patientHeaderName.setText(name);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        patientHomeReportsList = (RecyclerView) findViewById(R.id.patientHomeReportList);
+        patientHomeReportsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+
+        //Database Sync
+        userRef.keepSynced(true);
+        reportsRef.keepSynced(true);
     }
 
     @Override
