@@ -1,5 +1,6 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -90,6 +91,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         ArrayList<String> itemList = new ArrayList<>(Arrays.asList(bloodTest));
                         intent.putStringArrayListExtra("itemList", itemList);
                         context.startActivity(intent);
+                        ((Activity) context).finish();
                     }
                 });
 
