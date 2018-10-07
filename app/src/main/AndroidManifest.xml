@@ -51,6 +51,8 @@
         <activity android:name=".ServicesActivity" />
         <activity
             android:name=".PatientLoginActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".ConfirmServicesActivity"></activity>
     </application>
+
 </manifest>

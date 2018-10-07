@@ -2,6 +2,7 @@ package com.example.shreyesh.sarinstituteofmedicalscience;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHolder> {
@@ -47,7 +51,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
 
             //Blood tests
             case 0:
-                CharSequence[] bloodTest = {"TSH", "ABO Typing", "Liver Enzymes"};
+                final String[] bloodTest = {"TSH", "ABO Typing", "Liver Enzymes"};
                 final ArrayList selecteditem = new ArrayList();
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -67,7 +71,25 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                 builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        HashMap<String, Integer> testMap = new HashMap<>();
+                        testMap.put("TSH", 500);
+                        testMap.put("ABO Typing", 650);
+                        testMap.put("Liver Enzymes", 600);
 
+                        Integer total = 0;
+                        for (Object s : selecteditem) {
+
+                            if (testMap.containsKey(bloodTest[Integer.valueOf(s.toString())])) {
+                                total = total + testMap.get(bloodTest[Integer.valueOf(s.toString())]);
+                            }
+                        }
+                        Intent intent = new Intent(context, ConfirmServicesActivity.class);
+                        intent.putExtra("total", total.toString());
+                        intent.putStringArrayListExtra("itemSelectList", selecteditem);
+                        intent.putExtra("itemMap", testMap);
+                        ArrayList<String> itemList = new ArrayList<>(Arrays.asList(bloodTest));
+                        intent.putStringArrayListExtra("itemList", itemList);
+                        context.startActivity(intent);
                     }
                 });
 
@@ -118,6 +140,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                 builder2.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        selectedImaging.clear();
 
                     }
                 });
