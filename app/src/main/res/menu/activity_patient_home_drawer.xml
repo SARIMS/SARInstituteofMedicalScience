@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/navDocSchedule"
             android:icon="@drawable/baseline_schedule_black_18dp"
@@ -11,7 +11,7 @@
         <item
             android:id="@+id/navRequestService"
             android:icon="@drawable/health"
-            android:title="Request Service" />
+            android:title="Services" />
         <item
             android:id="@+id/navBills"
             android:icon="@drawable/bill"
@@ -20,5 +20,4 @@
             android:id="@+id/navSettings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Account Settings" />
-    </group>
 </menu>

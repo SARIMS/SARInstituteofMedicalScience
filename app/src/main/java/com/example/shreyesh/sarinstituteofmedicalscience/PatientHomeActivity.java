@@ -34,6 +34,7 @@ public class PatientHomeActivity extends AppCompatActivity
     private RecyclerView patientHomeReportsList;
     private DatabaseReference reportsRef, userRef;
     private FirebaseAuth firebaseAuth;
+    private String type;
     private TextView patientHeaderEmail, patientHeaderName;
 
     @Override
@@ -46,7 +47,7 @@ public class PatientHomeActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Patient Home");
 
 
-        String type = getIntent().getStringExtra("type");
+        type = getIntent().getStringExtra("type");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,6 +85,7 @@ public class PatientHomeActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(PatientHomeActivity.this, "Wrong Patient Type", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));
+                    finish();
                 }
 
             }
@@ -147,6 +149,7 @@ public class PatientHomeActivity extends AppCompatActivity
         if (id == R.id.navDocSchedule) {
             // Handle the camera action
         } else if (id == R.id.navRequestService) {
+            startActivity(new Intent(PatientHomeActivity.this, ServicesActivity.class).putExtra("type", type));
 
         } else if (id == R.id.navBills) {
 
