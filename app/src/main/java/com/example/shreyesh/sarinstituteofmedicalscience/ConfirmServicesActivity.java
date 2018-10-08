@@ -19,16 +19,21 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConfirmServicesActivity extends AppCompatActivity {
     private Context context;
-
+    private int c = 0;
     private List<ServiceConfirm> confirmList;
     private ConfirmServicesAdapter servicesAdapter;
     private Toolbar confirmServicesToobar;
@@ -38,7 +43,7 @@ public class ConfirmServicesActivity extends AppCompatActivity {
     private DatabaseReference billRef;
     private FirebaseAuth firebaseAuth;
     private String currentUserID;
-    private HashMap<String, String> billmap;
+    private Map<String, String> billmap, postMap;
     private String serviceType;
 
 
@@ -62,6 +67,7 @@ public class ConfirmServicesActivity extends AppCompatActivity {
         selectedServicesList.setAdapter(servicesAdapter);
         context = this;
         billmap = new HashMap<>();
+        postMap = new HashMap<>();
 
         //Firebase Components
         firebaseAuth = FirebaseAuth.getInstance();
@@ -120,11 +126,32 @@ public class ConfirmServicesActivity extends AppCompatActivity {
             }
         });
 
+
+        billRef.child(serviceType).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    c = c + 1;
+                    System.out.println(d.getKey());
+                    System.out.println(d.getValue().toString());
+                    postMap.put(d.getKey(), d.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
         //Confirm button
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                billmap.putAll(postMap);
                 billRef.child(serviceType).setValue(billmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -146,8 +173,6 @@ public class ConfirmServicesActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
             }
         });
 
