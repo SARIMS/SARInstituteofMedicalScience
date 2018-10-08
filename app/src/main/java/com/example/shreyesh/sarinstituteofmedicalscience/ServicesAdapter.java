@@ -90,6 +90,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         intent.putExtra("itemMap", testMap);
                         ArrayList<String> itemList = new ArrayList<>(Arrays.asList(bloodTest));
                         intent.putStringArrayListExtra("itemList", itemList);
+                        intent.putExtra("serviceType", "bloodTest");
                         context.startActivity(intent);
                         ((Activity) context).finish();
                     }
@@ -155,6 +156,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         intent.putStringArrayListExtra("itemSelectList", selectedImaging);
                         ArrayList<String> iTest = new ArrayList<>(Arrays.asList(imaging));
                         intent.putStringArrayListExtra("itemList", iTest);
+                        intent.putExtra("serviceType", "imaging");
                         context.startActivity(intent);
                         ((Activity) context).finish();
 
