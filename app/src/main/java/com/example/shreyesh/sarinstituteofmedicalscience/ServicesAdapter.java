@@ -52,7 +52,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
 
             //Blood tests
             case 0:
-                final String[] bloodTest = {"TSH", "ABO Typing", "Liver Enzymes"};
+                final String[] bloodTest = {"TSH", "ABO Typing", "Liver Enzymes", "Lipid Test", "ESR", "hCG Test"};
                 final ArrayList selecteditem = new ArrayList();
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -69,6 +69,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                     }
                 });
 
+
                 builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -76,6 +77,9 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         testMap.put("TSH", 500);
                         testMap.put("ABO Typing", 650);
                         testMap.put("Liver Enzymes", 600);
+                        testMap.put("Lipid Test", 1200);
+                        testMap.put("ESR", 1500);
+                        testMap.put("hCG", 3500);
 
                         Integer total = 0;
                         for (Object s : selecteditem) {
@@ -116,7 +120,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
 
             //Imaging
             case 1:
-                final String[] imaging = {"X-Ray", "CT Scan", "MRI"};
+                final String[] imaging = {"X-Ray", "CT Scan", "MRI", "Ultrasound", "Lung Screening", "Fluoroscopy", "Mammography"};
                 final ArrayList selectedImaging = new ArrayList();
 
                 final AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
@@ -141,6 +145,10 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         imgMap.put("X-Ray", 600);
                         imgMap.put("CT Scan", 800);
                         imgMap.put("MRI", 10000);
+                        imgMap.put("Ultrasound", 1800);
+                        imgMap.put("Lung Screening", 1500);
+                        imgMap.put("Fluoroscopy", 2000);
+                        imgMap.put("Mammography", 2500);
 
                         int total = 0;
                         for (Object s : selectedImaging) {
