@@ -1,11 +1,16 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ConfirmServicesActivity extends AppCompatActivity {
+    private Context context;
 
     private List<ServiceConfirm> confirmList;
     private ConfirmServicesAdapter servicesAdapter;
@@ -40,7 +46,7 @@ public class ConfirmServicesActivity extends AppCompatActivity {
         servicesAdapter = new ConfirmServicesAdapter(confirmList);
         selectedServicesList.setLayoutManager(new LinearLayoutManager(this));
         selectedServicesList.setAdapter(servicesAdapter);
-
+        context = this;
 
         //get Intents
         String total = getIntent().getStringExtra("total");
@@ -64,6 +70,34 @@ public class ConfirmServicesActivity extends AppCompatActivity {
         gtotal.setText("Rs " + d.toString());
 
 
+        //Cancel
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Cancel");
+                builder.setMessage("Are you sure your want to cancel?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(ConfirmServicesActivity.this, ServicesActivity.class));
+                        finish();
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+
+                Dialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+        });
 
 
 
