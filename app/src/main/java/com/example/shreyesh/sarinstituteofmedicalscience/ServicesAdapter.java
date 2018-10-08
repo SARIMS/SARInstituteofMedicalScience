@@ -141,7 +141,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         imgMap.put("CT Scan", 800);
                         imgMap.put("MRI", 10000);
 
-                        Integer total = 0;
+                        int total = 0;
                         for (Object s : selectedImaging) {
                             if (imgMap.containsKey(imaging[Integer.valueOf(s.toString())])) {
 
@@ -150,7 +150,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         }
 
                         Intent intent = new Intent(context, ConfirmServicesActivity.class);
-                        intent.putExtra("total", total);
+                        intent.putExtra("total", String.valueOf(total));
                         intent.putExtra("itemMap", imgMap);
                         intent.putStringArrayListExtra("itemSelectList", selectedImaging);
                         ArrayList<String> iTest = new ArrayList<>(Arrays.asList(imaging));

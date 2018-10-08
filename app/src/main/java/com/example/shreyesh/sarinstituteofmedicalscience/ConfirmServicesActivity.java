@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class ConfirmServicesActivity extends AppCompatActivity {
     private Toolbar confirmServicesToobar;
     private Button confirm, cancel;
     private RecyclerView selectedServicesList;
+    private TextView subtotal, gtotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,8 @@ public class ConfirmServicesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_confirm_services);
 
         //Initialize components
+        subtotal = (TextView) findViewById(R.id.confirmServiceTotal);
+        gtotal = (TextView) findViewById(R.id.confirmServicesGrandTotal);
         confirm = (Button) findViewById(R.id.confirmServiceConfirm);
         cancel = (Button) findViewById(R.id.confirmServiceCancel);
         confirmServicesToobar = (Toolbar) findViewById(R.id.confirmServciesToolbar);
@@ -52,6 +56,17 @@ public class ConfirmServicesActivity extends AppCompatActivity {
                 confirmList.add(new ServiceConfirm("Rs " + price, item));
             }
         }
+
+
+        subtotal.setText("Rs " + total);
+        Double d = (Double.parseDouble(total) * 0.025 + Double.parseDouble(total));
+
+        gtotal.setText("Rs " + d.toString());
+
+
+
+
+
 
 
     }
