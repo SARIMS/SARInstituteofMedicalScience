@@ -115,7 +115,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
 
             //Imaging
             case 1:
-                CharSequence[] imaging = {"X-Ray", "CT Scan", "MRI"};
+                final String[] imaging = {"X-Ray", "CT Scan", "MRI"};
                 final ArrayList selectedImaging = new ArrayList();
 
                 final AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
@@ -135,6 +135,28 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                 builder2.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                        HashMap<String, Integer> imgMap = new HashMap<>();
+                        imgMap.put("X-Ray", 600);
+                        imgMap.put("CT Scan", 800);
+                        imgMap.put("MRI", 10000);
+
+                        Integer total = 0;
+                        for (Object s : selectedImaging) {
+                            if (imgMap.containsKey(imaging[Integer.valueOf(s.toString())])) {
+
+                                total = total + imgMap.get(imaging[Integer.valueOf(s.toString())]);
+                            }
+                        }
+
+                        Intent intent = new Intent(context, ConfirmServicesActivity.class);
+                        intent.putExtra("total", total);
+                        intent.putExtra("itemMap", imgMap);
+                        intent.putStringArrayListExtra("itemSelectList", selectedImaging);
+                        ArrayList<String> iTest = new ArrayList<>(Arrays.asList(imaging));
+                        intent.putStringArrayListExtra("itemList", iTest);
+                        context.startActivity(intent);
+                        ((Activity) context).finish();
 
                     }
                 });
