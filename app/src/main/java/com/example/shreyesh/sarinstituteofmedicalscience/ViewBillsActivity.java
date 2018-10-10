@@ -76,26 +76,17 @@ public class ViewBillsActivity extends AppCompatActivity {
         imgRef = checkRef.child("imaging");
         medRef = checkRef.child("medicines");
 
-        testRef.addValueEventListener(new ValueEventListener() {
+
+        checkRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    testTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
-                    for (DataSnapshot d : dataSnapshot.getChildren()) {
-                        String item = d.getKey();
-                        String price = d.getValue().toString();
-                        if (!d.getKey().equalsIgnoreCase("Total")) {
-                            billItemList.add(new ServiceConfirm("Rs " + price, item));
-                        }
-                        billAdapter.notifyDataSetChanged();
-                    }
+                if (dataSnapshot.hasChild("bloodTest") || dataSnapshot.hasChild("imaging") || dataSnapshot.hasChild("medicines")) {
 
-                    imgRef.addValueEventListener(new ValueEventListener() {
+                    testRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-
                             if (dataSnapshot.exists()) {
-                                imgTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
+                                testTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
                                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                                     String item = d.getKey();
                                     String price = d.getValue().toString();
@@ -104,36 +95,60 @@ public class ViewBillsActivity extends AppCompatActivity {
                                     }
                                     billAdapter.notifyDataSetChanged();
                                 }
+                            }
+                            imgRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                medRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-
-                                            medTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
-                                            for (DataSnapshot d : dataSnapshot.getChildren()) {
-                                                String item = d.getKey();
-                                                String price = d.getValue().toString();
-                                                if (!d.getKey().equalsIgnoreCase("Total")) {
-                                                    billItemList.add(new ServiceConfirm("Rs " + price, item));
-                                                }
-                                                billAdapter.notifyDataSetChanged();
+                                    if (dataSnapshot.exists()) {
+                                        imgTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
+                                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                            String item = d.getKey();
+                                            String price = d.getValue().toString();
+                                            if (!d.getKey().equalsIgnoreCase("Total")) {
+                                                billItemList.add(new ServiceConfirm("Rs " + price, item));
                                             }
+                                            billAdapter.notifyDataSetChanged();
+                                        }
+                                    }
 
+                                    medRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+
+                                                medTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
+                                                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                                    String item = d.getKey();
+                                                    String price = d.getValue().toString();
+                                                    if (!d.getKey().equalsIgnoreCase("Total")) {
+                                                        billItemList.add(new ServiceConfirm("Rs " + price, item));
+                                                    }
+                                                    billAdapter.notifyDataSetChanged();
+                                                }
+
+
+                                            }
                                             grandTotal = testTotal + imgTotal + medTotal;
                                             gtotal.setText(String.valueOf(grandTotal));
 
                                         }
 
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                    }
+                                        }
+                                    });
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                }
 
-                                    }
-                                });
-                            }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
                         }
 
                         @Override
@@ -141,6 +156,7 @@ public class ViewBillsActivity extends AppCompatActivity {
 
                         }
                     });
+
 
                 }
 
