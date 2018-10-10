@@ -1,6 +1,7 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,7 +82,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         testMap.put("Liver Enzymes", 600);
                         testMap.put("Lipid Test", 1200);
                         testMap.put("ESR", 1500);
-                        testMap.put("hCG", 3500);
+                        testMap.put("hCG Test", 3500);
 
                         Integer total = 0;
                         for (Object s : selecteditem) {
@@ -189,6 +192,120 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
 
                 break;
 
+
+            case 3:
+                final String[] roomServices = {"Request Consultant Visit", "Diet Meal", "Drinking Water"};
+                final ArrayList selectedRoomService = new ArrayList();
+
+                final AlertDialog.Builder roomBuilder = new AlertDialog.Builder(context);
+                roomBuilder.setTitle("Select");
+                roomBuilder.setMultiChoiceItems(roomServices, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        if (b) {
+                            selectedRoomService.add(i);
+                        } else if (selectedRoomService.contains(i)) {
+                            selectedRoomService.remove(Integer.valueOf(i));
+                        }
+                    }
+                });
+
+                roomBuilder.setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        AlertDialog.Builder reqBuilder = new AlertDialog.Builder(context);
+                        reqBuilder.setMessage("Your request received");
+                        reqBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                return;
+                            }
+                        });
+                        Dialog dialog = reqBuilder.create();
+                        dialog.show();
+                        dialog.setCanceledOnTouchOutside(false);
+
+                    }
+                });
+
+                holder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Dialog dialog = roomBuilder.create();
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.show();
+                    }
+                });
+
+            case 2:
+                final String[] medicineList = {"Amoxicillin", "Azithromycin", "Generic Glucophage", "Lisinopril", "Singulair", "Hydrocodone", "Crestor",
+                        "Paracetamol", "Hydrochlorothiazide"};
+                Arrays.sort(medicineList);
+                final ArrayList selectedMedicines = new ArrayList();
+                final AlertDialog.Builder medicineBuilder = new AlertDialog.Builder(context);
+                medicineBuilder.setTitle("Select");
+                medicineBuilder.setMultiChoiceItems(medicineList, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        if (b) {
+                            selectedMedicines.add(i);
+                        } else if (selectedMedicines.contains(i)) {
+                            selectedMedicines.remove(Integer.valueOf(i));
+                        }
+                    }
+                });
+
+                medicineBuilder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        HashMap<String, Integer> medMap = new HashMap<>();
+                        medMap.put("Amoxicillin", 350);
+                        medMap.put("Azithromycin", 500);
+                        medMap.put("Lisinopril", 250);
+                        medMap.put("Generic Glucophage", 320);
+                        medMap.put("Singulair", 450);
+                        medMap.put("Hydrocodone", 300);
+                        medMap.put("Crestor", 200);
+                        medMap.put("Paracetamol", 150);
+                        medMap.put("Hydrochlorothiazide", 220);
+
+                        int total = 0;
+                        for (Object s : selectedMedicines) {
+                            if (medMap.containsKey(medicineList[Integer.valueOf(s.toString())])) {
+                                total = total + medMap.get(medicineList[Integer.valueOf(s.toString())]);
+                            }
+                        }
+
+                        Intent intent = new Intent(context, ConfirmServicesActivity.class);
+                        intent.putExtra("total", String.valueOf(total));
+                        intent.putExtra("itemMap", medMap);
+                        intent.putStringArrayListExtra("itemSelectList", selectedMedicines);
+                        ArrayList<String> iTest = new ArrayList<>(Arrays.asList(medicineList));
+                        intent.putStringArrayListExtra("itemList", iTest);
+                        intent.putExtra("serviceType", "medicines");
+                        context.startActivity(intent);
+                        ((Activity) context).finish();
+
+                    }
+                });
+
+                medicineBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        selectedMedicines.clear();
+                        return;
+                    }
+                });
+
+                holder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Dialog dialog = medicineBuilder.create();
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.show();
+                    }
+                });
 
         }
 

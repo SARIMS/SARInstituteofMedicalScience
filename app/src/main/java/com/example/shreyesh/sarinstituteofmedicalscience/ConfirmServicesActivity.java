@@ -34,6 +34,7 @@ import java.util.Map;
 public class ConfirmServicesActivity extends AppCompatActivity {
     private Context context;
     private int c = 0;
+    private double prevTotal;
     private List<ServiceConfirm> confirmList;
     private ConfirmServicesAdapter servicesAdapter;
     private Toolbar confirmServicesToobar;
@@ -93,7 +94,7 @@ public class ConfirmServicesActivity extends AppCompatActivity {
 
 
         subtotal.setText("Rs " + total);
-        Double d = (Double.parseDouble(total) * 0.025 + Double.parseDouble(total));
+        final Double d = (Double.parseDouble(total) * 0.025 + Double.parseDouble(total));
 
         gtotal.setText("Rs " + d.toString());
 
@@ -131,14 +132,17 @@ public class ConfirmServicesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    c = c + 1;
-                    System.out.println(d.getKey());
-                    System.out.println(d.getValue().toString());
-                    postMap.put(d.getKey(), d.getValue().toString());
+
+                if (dataSnapshot.exists()) {
+                    prevTotal = Double.parseDouble(dataSnapshot.child("Total").getValue().toString());
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        c = c + 1;
+                        System.out.println(d.getKey());
+                        System.out.println(d.getValue().toString());
+                        postMap.put(d.getKey(), d.getValue().toString());
+                    }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -152,6 +156,7 @@ public class ConfirmServicesActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 billmap.putAll(postMap);
+                billmap.put("Total", String.valueOf(d + prevTotal));
                 billRef.child(serviceType).setValue(billmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

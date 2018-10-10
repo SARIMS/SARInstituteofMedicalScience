@@ -1,9 +1,11 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,8 +34,8 @@ import java.io.Console;
 public class PatientHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView patientHomeReportsList;
-    private DatabaseReference reportsRef, userRef;
+    private RecyclerView patientHomeReportsList, noticeList;
+    private DatabaseReference reportsRef, userRef, noticeRef;
     private FirebaseAuth firebaseAuth;
     private String type;
     private TextView patientHeaderEmail, patientHeaderName;
@@ -75,6 +78,12 @@ public class PatientHomeActivity extends AppCompatActivity
 
         reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
         userRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type).child(userid);
+        noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
+
+        //keep data synced for offline
+        userRef.keepSynced(true);
+        reportsRef.keepSynced(true);
+        noticeRef.keepSynced(true);
 
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,8 +106,8 @@ public class PatientHomeActivity extends AppCompatActivity
         });
 
 
-        patientHomeReportsList = (RecyclerView) findViewById(R.id.patientHomeReportList);
-        patientHomeReportsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        noticeList = (RecyclerView) findViewById(R.id.patientHomeReportList);
+        noticeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
 
 
         //Database Sync
@@ -160,5 +169,39 @@ public class PatientHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Notice, AdminHomeActivity.NoticeViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Notice, AdminHomeActivity.NoticeViewHolder>(
+                Notice.class,
+                R.layout.notice_single,
+                AdminHomeActivity.NoticeViewHolder.class,
+                noticeRef
+        ) {
+            @Override
+            protected void populateViewHolder(AdminHomeActivity.NoticeViewHolder viewHolder, Notice model, int position) {
+
+                viewHolder.setNoticeDate(model.getDate());
+                viewHolder.setNoticeTitle(model.getTitle());
+                noticeList.setLongClickable(true);
+
+                final String id = getRef(position).getKey();
+                final Intent intent = new Intent(PatientHomeActivity.this, ViewNoticeActivity.class);
+                intent.putExtra("id", id);
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(intent);
+                    }
+                });
+
+            }
+        };
+
+        noticeList.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.notifyDataSetChanged();
+        firebaseRecyclerAdapter.startListening();
     }
 }

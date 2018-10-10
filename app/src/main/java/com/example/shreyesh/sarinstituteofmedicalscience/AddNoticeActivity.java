@@ -100,6 +100,7 @@ public class AddNoticeActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(AddNoticeActivity.this, "Notice added succesfully", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(AddNoticeActivity.this, AdminHomeActivity.class));
+                            finish();
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(AddNoticeActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
