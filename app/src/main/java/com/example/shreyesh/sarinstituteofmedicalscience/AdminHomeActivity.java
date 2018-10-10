@@ -41,6 +41,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
     private TextView inpatientCount, outpatientCount, doctorCount, empty;
     private DatabaseReference ipref, oref, noticeRef;
     private RecyclerView adminNoticeList;
+    private FirebaseAuth firebaseAuth;
 
 
 
@@ -64,6 +65,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Admin Home");
 
+        firebaseAuth = FirebaseAuth.getInstance();
         adminNoticeList = (RecyclerView) findViewById(R.id.noticeAdminList);
         adminNoticeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -192,7 +194,9 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
             case R.id.patientManange:
                 startActivity(new Intent(AdminHomeActivity.this, PatientManagementActivity.class));
             case R.id.adminLogOut:
-                FirebaseAuth.getInstance().signOut();
+                firebaseAuth.signOut();
+                startActivity(new Intent(AdminHomeActivity.this, AdminLoginActivity.class));
+                finish();
 
         }
         return true;
