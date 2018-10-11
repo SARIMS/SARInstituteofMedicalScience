@@ -236,6 +236,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         dialog.show();
                     }
                 });
+                break;
 
             case 2:
                 final String[] medicineList = {"Amoxicillin", "Azithromycin", "Generic Glucophage", "Lisinopril", "Singulair", "Hydrocodone", "Crestor",
@@ -306,7 +307,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ViewHo
                         dialog.show();
                     }
                 });
-
+                break;
         }
 
 
