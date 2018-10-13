@@ -150,6 +150,7 @@ public class PatientHomeActivity extends AppCompatActivity
         if (id == R.id.patientLogOut) {
             firebaseAuth.signOut();
             startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));
+            finish();
             return true;
         }
 
