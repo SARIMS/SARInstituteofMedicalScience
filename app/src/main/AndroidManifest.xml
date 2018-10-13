@@ -57,7 +57,8 @@
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ConfirmServicesActivity" />
         <activity android:name=".ViewBillsActivity" />
-        <activity android:name=".AccountSettingsActivity"></activity>
+        <activity android:name=".AccountSettingsActivity" />
+        <activity android:name=".DoctorsListActivity"></activity>
     </application>
 
 </manifest>

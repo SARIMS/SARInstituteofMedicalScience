@@ -163,6 +163,7 @@ public class PatientHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.navDocSchedule) {
+            startActivity(new Intent(PatientHomeActivity.this, DoctorsListActivity.class));
             // Handle the camera action
         } else if (id == R.id.navRequestService) {
             startActivity(new Intent(PatientHomeActivity.this, ServicesActivity.class).putExtra("type", type));
