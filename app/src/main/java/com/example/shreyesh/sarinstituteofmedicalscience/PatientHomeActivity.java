@@ -164,6 +164,7 @@ public class PatientHomeActivity extends AppCompatActivity
             startActivity(new Intent(PatientHomeActivity.this, ViewBillsActivity.class));
 
         } else if (id == R.id.navSettings) {
+            startActivity(new Intent(PatientHomeActivity.this, AccountSettingsActivity.class).putExtra("type", type));
 
         }
 

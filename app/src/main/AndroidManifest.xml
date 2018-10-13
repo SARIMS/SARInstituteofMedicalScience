@@ -30,6 +30,9 @@
         <activity
             android:name=".AdminLoginActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".PatientManagementActivity" />
         <activity
             android:name=".AddPatientActivity"
@@ -53,7 +56,8 @@
             android:name=".PatientLoginActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ConfirmServicesActivity" />
-        <activity android:name=".ViewBillsActivity"></activity>
+        <activity android:name=".ViewBillsActivity" />
+        <activity android:name=".AccountSettingsActivity"></activity>
     </application>
 
 </manifest>
