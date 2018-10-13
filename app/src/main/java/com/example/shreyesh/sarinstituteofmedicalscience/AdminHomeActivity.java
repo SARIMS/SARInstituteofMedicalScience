@@ -193,10 +193,12 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
         switch (item.getItemId()) {
             case R.id.patientManange:
                 startActivity(new Intent(AdminHomeActivity.this, PatientManagementActivity.class));
+                break;
             case R.id.adminLogOut:
                 firebaseAuth.signOut();
                 startActivity(new Intent(AdminHomeActivity.this, AdminLoginActivity.class));
                 finish();
+                break;
 
         }
         return true;

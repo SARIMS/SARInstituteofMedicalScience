@@ -28,8 +28,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.Console;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PatientHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +42,7 @@ public class PatientHomeActivity extends AppCompatActivity
     private FirebaseAuth firebaseAuth;
     private String type;
     private TextView patientHeaderEmail, patientHeaderName;
+    private CircleImageView patientImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class PatientHomeActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         patientHeaderEmail = (TextView) headerView.findViewById(R.id.patientHeaderEmail);
         patientHeaderName = (TextView) headerView.findViewById(R.id.patientHeaderName);
+        patientImage = (CircleImageView) headerView.findViewById(R.id.patientImage);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -91,6 +96,8 @@ public class PatientHomeActivity extends AppCompatActivity
                 if (dataSnapshot.exists()) {
                     String name = dataSnapshot.child("name").getValue().toString();
                     patientHeaderName.setText(name);
+                    String image = dataSnapshot.child("image").getValue().toString();
+                    Picasso.get().load(image).placeholder(R.drawable.avatarplaceholder).into(patientImage);
                 } else {
                     Toast.makeText(PatientHomeActivity.this, "Wrong Patient Type", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));

@@ -63,6 +63,9 @@ public class PatientManagementActivity extends AppCompatActivity {
             }
         });
 
+        inRef.keepSynced(true);
+        outRef.keepSynced(true);
+
 
     }
 
@@ -89,6 +92,13 @@ public class PatientManagementActivity extends AppCompatActivity {
                             viewHolder.setSex(model.getGender());
 
                             final String uid = getRef(position).getKey();
+
+                            String image = model.getImage();
+                            if (!image.equalsIgnoreCase("default")) {
+                                viewHolder.setImage(image);
+                            }                                                   
+
+
 
                             viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -122,6 +132,13 @@ public class PatientManagementActivity extends AppCompatActivity {
                             viewHolder.setSex(model.getGender());
 
                             final String uid = getRef(position).getKey();
+
+
+                            String image = model.getImage();
+                            if (!image.equalsIgnoreCase("default")) {
+                                viewHolder.setImage(image);
+                            }
+
 
                             viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -160,6 +177,10 @@ public class PatientManagementActivity extends AppCompatActivity {
                     viewHolder.setSex(model.getGender());
 
                     final String uid = getRef(position).getKey();
+                    String image = model.getImage();
+                    if (!image.equalsIgnoreCase("default")) {
+                        viewHolder.setImage(image);
+                    }
 
                     viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -191,6 +212,11 @@ public class PatientManagementActivity extends AppCompatActivity {
                     viewHolder.setName(model.getName());
                     viewHolder.setAge(model.getAge());
                     viewHolder.setSex(model.getGender());
+
+                    String image = model.getImage();
+                    if (!image.equalsIgnoreCase("default")) {
+                        viewHolder.setImage(image);
+                    }
 
                     final String uid = getRef(position).getKey();
 
