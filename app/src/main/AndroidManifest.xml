@@ -58,7 +58,8 @@
         <activity android:name=".ConfirmServicesActivity" />
         <activity android:name=".ViewBillsActivity" />
         <activity android:name=".AccountSettingsActivity" />
-        <activity android:name=".DoctorsListActivity"></activity>
+        <activity android:name=".DoctorsListActivity" />
+        <activity android:name=".AddDoctorActivity"></activity>
     </application>
 
 </manifest>
