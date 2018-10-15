@@ -1,9 +1,13 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.app.ProgressDialog;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,10 +16,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static android.view.View.GONE;
 
@@ -29,6 +40,8 @@ public class AddDoctorActivity extends AppCompatActivity {
     private EditText toSunday, toMonday, toTuesday, toWednesday, toThursday, toFriday, toSaturday;
     private Toolbar addDoctorToolbar;
     private DatabaseReference doctorRef;
+    private FirebaseAuth firebaseAuth;
+    private ProgressDialog progressDialog;
     private LinearLayout sundayLayout, mondayLayout, tuesdayLayout, wednesdayLayout, thursdayLayout, fridayLayout, saturdayLayout;
     private CheckBox sundayCheckbox, mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox;
 
@@ -47,6 +60,10 @@ public class AddDoctorActivity extends AppCompatActivity {
         toSaturdaySpinner = (Spinner) findViewById(R.id.saturdayToSpinner);
         toSundaySpinner = (Spinner) findViewById(R.id.sundayToSpinner);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Registering");
+        progressDialog.setMessage("Please wait while we register...");
+        progressDialog.setCanceledOnTouchOutside(false);
 
         //from spinner
         fromFridaySpinner = (Spinner) findViewById(R.id.fridayFromSpinner);
@@ -212,8 +229,103 @@ public class AddDoctorActivity extends AppCompatActivity {
         });
 
 
+        //firebase components
+        firebaseAuth = FirebaseAuth.getInstance();
+        doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
 
+        addDoctorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String name = doctorRegName.getEditText().getText().toString();
+                String email = doctorRegEmail.getEditText().getText().toString();
+                final String department = doctorRegDepartment.getEditText().getText().toString();
+                String password = doctorRegPassword.getEditText().getText().toString();
+                String confirmPassword = doctorRegConfirmPassword.getEditText().getText().toString();
+                final String monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+                if (sundayCheckbox.isChecked()) {
+                    sunday = fromSunday.getText().toString() + fromSundaySpinner.getSelectedItem().toString() + "-" + toSunday.getText().toString() + toSundaySpinner.getSelectedItem().toString();
+                } else {
+                    sunday = "Not Available";
+                }
+                if (mondayCheckBox.isChecked()) {
+                    monday = fromMonday.getText().toString() + fromMondaySpinner.getSelectedItem().toString() + "-" + toMonday.getText().toString() + toMondaySpinner.getSelectedItem().toString();
+                } else {
+                    monday = "Not Available";
+                }
+                if (tuesdayCheckBox.isChecked()) {
+                    tuesday = fromTuesday.getText().toString() + fromTuesdaySpinner.getSelectedItem().toString() + "-" + toTuesday.getText().toString() + toTuesdaySpinner.getSelectedItem().toString();
+                } else {
+                    tuesday = "Not Available";
+                }
+                if (wednesdayCheckBox.isChecked()) {
+                    wednesday = fromWednesday.getText().toString() + fromWednesdaySpinner.getSelectedItem().toString() + "-" + toWednesday.getText().toString() + toWednesdaySpinner.getSelectedItem().toString();
+                } else {
+                    wednesday = "Not Available";
+                }
+                if (thursdayCheckBox.isChecked()) {
+                    thursday = fromThursday.getText().toString() + fromThursdaySpinner.getSelectedItem().toString() + "-" + toThursday.getText().toString() + toThursdaySpinner.getSelectedItem().toString();
+                } else {
+                    thursday = "Not Available";
+                }
+                if (fridayCheckBox.isChecked()) {
+                    friday = fromFriday.getText().toString() + fromFridaySpinner.getSelectedItem().toString() + "-" + toFriday.getText().toString() + toFridaySpinner.getSelectedItem().toString();
+                } else {
+                    friday = "Not Available";
+                }
+                if (saturdayCheckBox.isChecked()) {
+                    saturday = fromSaturday.getText().toString() + fromSaturdaySpinner.getSelectedItem().toString() + "-" + toSaturday.getText().toString() + toSaturdaySpinner.getSelectedItem().toString();
+                } else {
+                    saturday = "Not Available";
+                }
 
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+                    Toast.makeText(AddDoctorActivity.this, "Please fill all details", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(AddDoctorActivity.this, "Invalid Email", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (!password.equals(confirmPassword)) {
+                    Toast.makeText(AddDoctorActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                progressDialog.show();
+                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        String userid = firebaseAuth.getCurrentUser().getUid();
+                        HashMap<String, String> doctorMap = new HashMap<>();
+                        doctorMap.put("name", name);
+                        doctorMap.put("department", department);
+                        doctorMap.put("image", "default");
+                        doctorMap.put("sunday", sunday);
+                        doctorMap.put("monday", monday);
+                        doctorMap.put("tuesday", tuesday);
+                        doctorMap.put("wednesday", wednesday);
+                        doctorMap.put("thursday", thursday);
+                        doctorMap.put("friday", friday);
+                        doctorMap.put("saturday", saturday);
+
+                        doctorRef.child(userid).setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(AddDoctorActivity.this, "Registered Successfully", Toast.LENGTH_LONG).show();
+                                } else {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(AddDoctorActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
 
     }
 }
