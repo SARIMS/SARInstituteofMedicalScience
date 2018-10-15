@@ -16,6 +16,7 @@ public class Doctor {
         this.saturday = saturday;
     }
 
+
     public Doctor() {
     }
 

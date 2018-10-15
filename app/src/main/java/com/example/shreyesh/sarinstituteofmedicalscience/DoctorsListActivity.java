@@ -7,6 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +23,7 @@ public class DoctorsListActivity extends AppCompatActivity {
     private Toolbar doctorListToolbar;
     private List<Doctor> doctorList;
     private DoctorListAdapter doctorListAdapter;
+    private DatabaseReference doctorRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +40,34 @@ public class DoctorsListActivity extends AppCompatActivity {
         doctorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         doctorRecyclerView.setAdapter(doctorListAdapter);
 
-        doctorList.add(new Doctor("Satwik Sharma", "Cardiology", "default", "10am-1pm", "2pm-5pm", "2pm-5pm", "2pm-5pm", "2pm-5pm", "2pm-5pm", "-"));
+        doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
+        doctorRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    /*String name=d.child("name").getValue().toString();
+                    String department=d.child("department").getValue().toString();
+                    String image=d.child("image").getValue().toString();
+                    String monday=d.child("monday").getValue().toString();
+                    String tuesday=d.child("tuesday").getValue().toString();
+                    String wednesday=d.child("wednesday").getValue().toString();
+                    String thursday=d.child("thursday").getValue().toString();
+                    String friday=d.child("friday").getValue().toString();
+                    String saturday=d.child("saturday").getValue().toString();
+                    String sunday=d.child("sunday").getValue().toString();*/
+                    Doctor doctor = d.getValue(Doctor.class);
+
+                    //doctorList.add(new Doctor(name,department,image,sunday,monday,tuesday,wednesday,thursday,friday,saturday));
+                    doctorList.add(doctor);
+                    doctorListAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 
