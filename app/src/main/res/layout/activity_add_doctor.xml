@@ -129,9 +129,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -154,18 +154,18 @@
                     android:id="@+id/sundayCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight=".7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/sundayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -174,7 +174,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:text="From" />
 
                 <EditText
@@ -187,25 +187,25 @@
                     android:id="@+id/sundayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/sundayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="0.9" />
 
                 <Spinner
                     android:id="@+id/sundayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
 
             </LinearLayout>
@@ -226,19 +226,20 @@
                     android:id="@+id/mondayCheckbox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
 
             <LinearLayout
+                android:id="@+id/mondayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -247,7 +248,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:text="From" />
 
                 <EditText
@@ -260,25 +261,25 @@
                     android:id="@+id/mondayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/mondayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="0.9" />
 
                 <Spinner
                     android:id="@+id/mondayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
 
             </LinearLayout>
@@ -300,18 +301,19 @@
                     android:id="@+id/tuesdayCheckbox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/tuesdayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -320,7 +322,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:text="From" />
 
                 <EditText
@@ -333,25 +335,25 @@
                     android:id="@+id/tuesdayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight=".4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/tuesdayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight=".9" />
 
                 <Spinner
                     android:id="@+id/tuesdayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
 
             </LinearLayout>
@@ -372,18 +374,19 @@
                     android:id="@+id/wednesdayCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/wednesdayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -392,7 +395,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:text="From" />
 
                 <EditText
@@ -405,25 +408,25 @@
                     android:id="@+id/wednesdayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight=".4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/wednesdayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight=".9" />
 
                 <Spinner
                     android:id="@+id/wednesdayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
 
             </LinearLayout>
@@ -444,19 +447,20 @@
                     android:id="@+id/thursdayCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
 
             <LinearLayout
+                android:id="@+id/thursdayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -465,7 +469,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight=".7"
                     android:text="From" />
 
                 <EditText
@@ -478,25 +482,25 @@
                     android:id="@+id/thursdayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight=".4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/thursdayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight=".9" />
 
                 <Spinner
                     android:id="@+id/thursdayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
 
             </LinearLayout>
@@ -518,18 +522,19 @@
                     android:id="@+id/fridayCheckBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fridayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -538,7 +543,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:text="From" />
 
                 <EditText
@@ -551,25 +556,25 @@
                     android:id="@+id/fridayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/fridayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight=".9" />
 
                 <Spinner
                     android:id="@+id/fridayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
 
             </LinearLayout>
@@ -590,18 +595,19 @@
                     android:id="@+id/saturdayCheckbox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.7" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.3"
                     android:text="Available" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/saturdayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -610,7 +616,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:text="From" />
 
                 <EditText
@@ -623,25 +629,25 @@
                     android:id="@+id/saturdayFromSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:text="To" />
 
                 <EditText
                     android:id="@+id/saturdayToEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="0.9" />
 
                 <Spinner
                     android:id="@+id/saturdayToSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></Spinner>
+                    android:layout_weight="1.5"></Spinner>
             </LinearLayout>
 
             <Button
@@ -649,6 +655,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
                 android:background="@android:color/holo_orange_dark"
                 android:text="Add Doctor"
                 android:textColor="@color/white" />

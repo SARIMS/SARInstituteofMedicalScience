@@ -199,6 +199,8 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
                 startActivity(new Intent(AdminHomeActivity.this, AdminLoginActivity.class));
                 finish();
                 break;
+            case R.id.doctorManage:
+                startActivity(new Intent(AdminHomeActivity.this, AddDoctorActivity.class));
 
         }
         return true;
