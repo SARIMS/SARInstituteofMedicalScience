@@ -308,6 +308,7 @@ public class AddDoctorActivity extends AppCompatActivity {
                         doctorMap.put("thursday", thursday);
                         doctorMap.put("friday", friday);
                         doctorMap.put("saturday", saturday);
+                        doctorMap.put("userid", userid);
 
                         doctorRef.child(userid).setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

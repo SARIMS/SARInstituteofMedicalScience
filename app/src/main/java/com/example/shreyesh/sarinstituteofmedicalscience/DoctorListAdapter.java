@@ -1,6 +1,7 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import java.util.List;
 
 public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ViewHolder> {
     @NonNull
-
 
     private Context context;
     private List<Doctor> doctorList;
@@ -45,6 +45,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
         String friday = doctorList.get(position).getFriday();
         String saturday = doctorList.get(position).getSaturday();
         String sunday = doctorList.get(position).getSunday();
+        String userid = doctorList.get(position).getUserid();
 
         holder.setname(name);
         holder.setDepartment(department);
@@ -57,7 +58,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
         holder.setSaturday(saturday);
 
 
-        holder.setBookingButton();
+        holder.setBookingButton(userid, name);
 
 
     }
@@ -122,12 +123,15 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
             sat.setText(time);
         }
 
-        public void setBookingButton() {
+        public void setBookingButton(final String userid, final String username) {
             Button button = (Button) view.findViewById(R.id.bookAppointmentSingle);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "It work", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(context, BookAppointmentActivity.class);
+                    intent.putExtra("userid", userid);
+                    intent.putExtra("username", username);
+                    context.startActivity(intent);
                 }
             });
         }

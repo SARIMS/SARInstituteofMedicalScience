@@ -68,8 +68,5 @@ public class DoctorsListActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 }

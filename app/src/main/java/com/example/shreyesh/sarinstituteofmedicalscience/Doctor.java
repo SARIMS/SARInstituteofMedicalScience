@@ -1,9 +1,9 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
 public class Doctor {
-    private String name, department, image, sunday, monday, tuesday, wednesday, thursday, friday, saturday;
+    private String name, department, image, sunday, monday, tuesday, wednesday, thursday, friday, saturday, userid;
 
-    public Doctor(String name, String department, String image, String sunday, String monday, String tuesday, String wednesday, String thursday, String friday, String saturday) {
+    public Doctor(String name, String department, String image, String sunday, String monday, String tuesday, String wednesday, String thursday, String friday, String saturday, String userid) {
         this.name = name;
         this.department = department;
         this.image = image;
@@ -14,6 +14,7 @@ public class Doctor {
         this.thursday = thursday;
         this.friday = friday;
         this.saturday = saturday;
+        this.userid = userid;
     }
 
 
@@ -94,6 +95,14 @@ public class Doctor {
 
     public String getSaturday() {
         return saturday;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public void setSaturday(String saturday) {

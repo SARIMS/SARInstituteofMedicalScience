@@ -59,7 +59,10 @@
         <activity android:name=".ViewBillsActivity" />
         <activity android:name=".AccountSettingsActivity" />
         <activity android:name=".DoctorsListActivity" />
-        <activity android:name=".AddDoctorActivity"></activity>
+        <activity android:name=".AddDoctorActivity" />
+        <activity
+            android:name=".BookAppointmentActivity"
+            android:parentActivityName=".DoctorsListActivity"></activity>
     </application>
 
 </manifest>
