@@ -118,7 +118,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String aDate = appointmentDate.getText().toString();
                 final String aTime = appointmentTime.getText().toString();
-                appointmentRef.addValueEventListener(new ValueEventListener() {
+                appointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         res = true;
@@ -127,9 +127,6 @@ public class BookAppointmentActivity extends AppCompatActivity {
                                 String at = d.child("time").getValue().toString();
                                 String ad = d.child("date").getValue().toString();
                                 String id = d.child("doctorid").getValue().toString();
-                                System.out.println(at);
-                                System.out.println(ad);
-                                System.out.println(id);
                                 /*if(at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
                                     System.out.print("hi");
                                     res = false;
