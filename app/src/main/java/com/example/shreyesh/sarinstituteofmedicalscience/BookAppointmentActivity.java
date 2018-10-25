@@ -61,8 +61,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Book Appointment");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        firebaseAuth=FirebaseAuth.getInstance();
-        currentUserID=firebaseAuth.getCurrentUser().getUid();
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUserID = firebaseAuth.getCurrentUser().getUid();
         appointmentDate = (EditText) findViewById(R.id.appointmentDate);
         appointmentTime = (EditText) findViewById(R.id.appointmentTime);
         confirm = (Button) findViewById(R.id.confirmAppointment);
@@ -70,8 +70,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
         doctorsName.setText("Dr. " + username);
 
-        doctorRef=FirebaseDatabase.getInstance().getReference().child("doctors");
-        appointmentRef=FirebaseDatabase.getInstance().getReference().child("appointments").child(currentUserID);
+        doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
+        appointmentRef = FirebaseDatabase.getInstance().getReference().child("appointments").child(currentUserID);
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -116,59 +116,66 @@ public class BookAppointmentActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String aDate=appointmentDate.getText().toString();
-                String aTime=appointmentTime.getText().toString();
-                 if(makeAppointment(aDate,aTime,userid)){
-                     HashMap<String,String> appointmentMap=new HashMap<>();
-                     appointmentMap.put("date",aDate);
-                     appointmentMap.put("time",aTime);
-                     appointmentMap.put("doctor",username);
-                     appointmentMap.put("doctorid",userid);
-                     appointmentRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                         @Override
-                         public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(BookAppointmentActivity.this,"Booking Successfull",Toast.LENGTH_LONG).show();
-                                }
-                                else{
-                                    Toast.makeText(BookAppointmentActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                                }
-                         }
-                     });
-                 }else{
-                     Toast.makeText(BookAppointmentActivity.this,"Appointment not available at this time please try some other time",Toast.LENGTH_LONG).show();
-                 }
+                final String aDate = appointmentDate.getText().toString();
+                final String aTime = appointmentTime.getText().toString();
+                appointmentRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        res = true;
+                        if (dataSnapshot.hasChildren()) {
+                            for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                String at = d.child("time").getValue().toString();
+                                String ad = d.child("date").getValue().toString();
+                                String id = d.child("doctorid").getValue().toString();
+                                System.out.println(at);
+                                System.out.println(ad);
+                                System.out.println(id);
+                                /*if(at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
+                                    System.out.print("hi");
+                                    res = false;
+                                    break;
+                                }*/
+                            }
+                            if (res) {
+                                HashMap<String, String> appointmentMap = new HashMap<>();
+                                appointmentMap.put("date", aDate);
+                                appointmentMap.put("time", aTime);
+                                appointmentMap.put("doctor", username);
+                                appointmentMap.put("doctorid", userid);
+                                appointmentRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(BookAppointmentActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(BookAppointmentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                            } else {
+                                Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
+
+
     }
+
     private void updateLabel() {
         String myFormat = "MM/dd/yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(myFormat, Locale.US);
         appointmentDate.setText(simpleDateFormat.format(myCalender.getTime()));
     }
-    private boolean makeAppointment(final String appointmentDate, final String appointmentTime, final String did){
-        appointmentRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                res=true;
-                if(dataSnapshot.exists()) {
-                    for (DataSnapshot d : dataSnapshot.getChildren()) {
-                        String at = d.child("time").getValue().toString();
-                        String ad = d.child("date").getValue().toString();
-                        String id = d.child("doctorid").getValue().toString();
-                        if (at.equals(appointmentTime) && ad.equals(appointmentDate) && id.equals(did))
-                            res = false;
-                        else
-                            res = true;
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-        return res;
-
-    }
 }
