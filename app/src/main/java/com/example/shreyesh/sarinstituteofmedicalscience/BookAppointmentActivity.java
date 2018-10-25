@@ -24,12 +24,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static java.util.Locale.US;
 
 public class BookAppointmentActivity extends AppCompatActivity {
 
@@ -41,6 +45,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private TextView doctorsName;
     private String currentUserID;
+    private String[] days;
     private boolean res;
     private Calendar myCalender = Calendar.getInstance();
     private Calendar mcurrentTime = Calendar.getInstance();
@@ -60,6 +65,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
         setSupportActionBar(bookAppointmentToolbar);
         getSupportActionBar().setTitle("Book Appointment");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        days = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserID = firebaseAuth.getCurrentUser().getUid();
@@ -124,40 +131,68 @@ public class BookAppointmentActivity extends AppCompatActivity {
                         res = true;
                         if (dataSnapshot.hasChildren()) {
                             for (DataSnapshot d : dataSnapshot.getChildren()) {
-                                String at = d.child("time").getValue().toString();
-                                String ad = d.child("date").getValue().toString();
-                                String id = d.child("doctorid").getValue().toString();
-                                /*if(at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
-                                    System.out.print("hi");
-                                    res = false;
-                                    break;
-                                }*/
-                            }
-                            if (res) {
-                                HashMap<String, String> appointmentMap = new HashMap<>();
-                                appointmentMap.put("date", aDate);
-                                appointmentMap.put("time", aTime);
-                                appointmentMap.put("doctor", username);
-                                appointmentMap.put("doctorid", userid);
-                                appointmentRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                final String at = d.child("time").getValue().toString();
+                                final String ad = d.child("date").getValue().toString();
+                                final String id = d.child("doctorid").getValue().toString();
+                                final Date date1 = new Date(aDate);
+                                final Calendar current = Calendar.getInstance();
+                                current.set(Calendar.HOUR, 0);
+                                current.set(Calendar.MINUTE, 0);
+                                current.set(Calendar.SECOND, 0);
+                                current.set(Calendar.MILLISECOND, 0);
+                                final Date currentDate = current.getTime();
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(date1);
+                                int day = calendar.get(Calendar.DAY_OF_WEEK);
+                                final String dayOfWeek = days[day - 1];
+                                System.out.println("Day of week " + dayOfWeek);
+                                doctorRef.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(BookAppointmentActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (date1.before(currentDate)) {
+                                            Toast.makeText(BookAppointmentActivity.this, "Cannot select past date", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (dataSnapshot.child(dayOfWeek.toLowerCase()).getValue().toString().equals("Not Available")) {
+                                            Toast.makeText(BookAppointmentActivity.this, "Doctor not available on this Day of the Week", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
+                                            res = false;
+                                            Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        if (res) {
+                                            HashMap<String, String> appointmentMap = new HashMap<>();
+                                            appointmentMap.put("date", aDate);
+                                            appointmentMap.put("time", aTime);
+                                            appointmentMap.put("doctor", username);
+                                            appointmentMap.put("doctorid", userid);
+                                            appointmentRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(BookAppointmentActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(BookAppointmentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+
                                         } else {
-                                            Toast.makeText(BookAppointmentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                });
 
-                            } else {
-                                Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         }
-
-
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
@@ -171,7 +206,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
     private void updateLabel() {
         String myFormat = "MM/dd/yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(myFormat, Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(myFormat, US);
         appointmentDate.setText(simpleDateFormat.format(myCalender.getTime()));
     }
 
