@@ -31,14 +31,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.Console;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PatientHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView patientHomeReportsList, noticeList;
-    private DatabaseReference reportsRef, userRef, noticeRef;
+    private List<Appointment> appointmentList;
+    private AppointmentRecyclerAdapter appointmentRecyclerAdapter;
+    private RecyclerView appointmentsReclcyerView, noticeList;
+    private DatabaseReference reportsRef, userRef, noticeRef,appointmentRef;
     private FirebaseAuth firebaseAuth;
     private String type;
     private TextView patientHeaderEmail, patientHeaderName;
@@ -84,6 +88,7 @@ public class PatientHomeActivity extends AppCompatActivity
         reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
         userRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type).child(userid);
         noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
+        appointmentRef=FirebaseDatabase.getInstance().getReference().child("appointmens");
 
         //keep data synced for offline
         userRef.keepSynced(true);
@@ -117,9 +122,36 @@ public class PatientHomeActivity extends AppCompatActivity
         noticeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
 
 
+
+        appointmentsReclcyerView=(RecyclerView)findViewById(R.id.appointmentsRecyclerView);
+        appointmentsReclcyerView.setLayoutManager(new LinearLayoutManager(this));
+
+        appointmentList=new ArrayList<>();
+        appointmentRecyclerAdapter=new AppointmentRecyclerAdapter(appointmentList);
+
+        appointmentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d:dataSnapshot.getChildren()) {
+                    String date = d.child("date").getValue().toString();
+                    String time = d.child("time").getValue().toString();
+                    String doctor = d.child("doctor").getValue().toString();
+                    appointmentList.add(new Appointment(doctor,time,date));
+                    appointmentRecyclerAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         //Database Sync
         userRef.keepSynced(true);
         reportsRef.keepSynced(true);
+        appointmentRef.keepSynced(true);
     }
 
     @Override

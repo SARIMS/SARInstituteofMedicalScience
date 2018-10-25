@@ -3,6 +3,7 @@ package com.example.shreyesh.sarinstituteofmedicalscience;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,23 +13,35 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class BookAppointmentActivity extends AppCompatActivity {
 
     private Toolbar bookAppointmentToolbar;
     private EditText appointmentDate, appointmentTime;
-    private Button confirm, cancel;
+    private Button confirm;
     private String userid, username;
     private DatabaseReference doctorRef, appointmentRef;
+    private FirebaseAuth firebaseAuth;
     private TextView doctorsName;
+    private String currentUserID;
+    private boolean res;
     private Calendar myCalender = Calendar.getInstance();
     private Calendar mcurrentTime = Calendar.getInstance();
     private int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
@@ -48,6 +61,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Book Appointment");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        firebaseAuth=FirebaseAuth.getInstance();
+        currentUserID=firebaseAuth.getCurrentUser().getUid();
         appointmentDate = (EditText) findViewById(R.id.appointmentDate);
         appointmentTime = (EditText) findViewById(R.id.appointmentTime);
         confirm = (Button) findViewById(R.id.confirmAppointment);
@@ -55,6 +70,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
         doctorsName.setText("Dr. " + username);
 
+        doctorRef=FirebaseDatabase.getInstance().getReference().child("doctors");
+        appointmentRef=FirebaseDatabase.getInstance().getReference().child("appointments").child(currentUserID);
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -96,12 +113,62 @@ public class BookAppointmentActivity extends AppCompatActivity {
             }
         });
 
-
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String aDate=appointmentDate.getText().toString();
+                String aTime=appointmentTime.getText().toString();
+                 if(makeAppointment(aDate,aTime,userid)){
+                     HashMap<String,String> appointmentMap=new HashMap<>();
+                     appointmentMap.put("date",aDate);
+                     appointmentMap.put("time",aTime);
+                     appointmentMap.put("doctor",username);
+                     appointmentMap.put("doctorid",userid);
+                     appointmentRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                         @Override
+                         public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(BookAppointmentActivity.this,"Booking Successfull",Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    Toast.makeText(BookAppointmentActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                                }
+                         }
+                     });
+                 }else{
+                     Toast.makeText(BookAppointmentActivity.this,"Appointment not available at this time please try some other time",Toast.LENGTH_LONG).show();
+                 }
+            }
+        });
     }
-
     private void updateLabel() {
         String myFormat = "MM/dd/yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(myFormat, Locale.US);
         appointmentDate.setText(simpleDateFormat.format(myCalender.getTime()));
+    }
+    private boolean makeAppointment(final String appointmentDate, final String appointmentTime, final String did){
+        appointmentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                res=true;
+                if(dataSnapshot.exists()) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        String at = d.child("time").getValue().toString();
+                        String ad = d.child("date").getValue().toString();
+                        String id = d.child("doctorid").getValue().toString();
+                        if (at.equals(appointmentTime) && ad.equals(appointmentDate) && id.equals(did))
+                            res = false;
+                        else
+                            res = true;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return res;
+
     }
 }
