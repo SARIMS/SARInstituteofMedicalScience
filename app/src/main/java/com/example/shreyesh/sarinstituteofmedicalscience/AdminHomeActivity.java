@@ -39,7 +39,7 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
     private ActionBar actionBar;
     private NavigationView navigationView;
     private TextView inpatientCount, outpatientCount, doctorCount, empty;
-    private DatabaseReference ipref, oref, noticeRef;
+    private DatabaseReference ipref, oref, noticeRef, doctorRef;
     private RecyclerView adminNoticeList;
     private FirebaseAuth firebaseAuth;
 
@@ -74,11 +74,13 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
         doctorCount = (TextView) findViewById(R.id.doctorCount);
         ipref = FirebaseDatabase.getInstance().getReference().child("patients").child("inpatients");
         oref = FirebaseDatabase.getInstance().getReference().child("patients").child("outpatients");
+        doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
         noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
 
         ipref.keepSynced(true);
         oref.keepSynced(true);
         noticeRef.keepSynced(true);
+        doctorRef.keepSynced(true);
 
         ipref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,6 +98,18 @@ public class AdminHomeActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 outpatientCount.setText(Long.toString(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        doctorRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                doctorCount.setText(Long.toString(dataSnapshot.getChildrenCount()));
             }
 
             @Override

@@ -1,12 +1,16 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +66,7 @@ public class ViewBillsActivity extends AppCompatActivity {
         imgFlag = medFlag = testFlag = 0;
 
 
+        context = this;
         billItemList = new ArrayList<>();
         billAdapter = new ConfirmServicesAdapter(billItemList);
         billList.setLayoutManager(new LinearLayoutManager(this));
@@ -168,6 +173,39 @@ public class ViewBillsActivity extends AppCompatActivity {
             }
         });
 
+        makePayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String[] options = {"Credit/Debit Card", "Cash"};
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Select Payment Mode");
+                builder.setSingleChoiceItems(options, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                break;
+                            case 1:
+                                AlertDialog.Builder b1 = new AlertDialog.Builder(context);
+                                b1.setMessage("Please go to Counter 2 and pay.\nThank You !");
+                                b1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        return;
+                                    }
+                                });
+                                Dialog dialog = b1.create();
+                                dialog.setCanceledOnTouchOutside(false);
+                                dialog.show();
+                        }
+                        return;
+                    }
+                });
+                Dialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+        });
 
     }
 
