@@ -62,7 +62,11 @@
         <activity android:name=".AddDoctorActivity" />
         <activity
             android:name=".BookAppointmentActivity"
-            android:parentActivityName=".DoctorsListActivity"></activity>
+            android:parentActivityName=".DoctorsListActivity" />
+        <activity
+            android:name=".DoctorHomeActivity"
+            android:label="@string/title_activity_doctor_home"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

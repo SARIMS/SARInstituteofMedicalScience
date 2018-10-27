@@ -56,15 +56,20 @@ public class PatientManagementActivity extends AppCompatActivity {
 
         patientRef.keepSynced(true);
 
-        addPatient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(PatientManagementActivity.this, AddPatientActivity.class));
-            }
-        });
-
+        String type = getIntent().getStringExtra("Doctor");
+        if (type != null) {
+            if (type.equals("Doctor"))
+                addPatient.setVisibility(View.GONE);
+            addPatient.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(PatientManagementActivity.this, AddPatientActivity.class));
+                }
+            });
+        }
         inRef.keepSynced(true);
         outRef.keepSynced(true);
+
 
 
     }

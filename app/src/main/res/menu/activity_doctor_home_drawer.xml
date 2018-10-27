@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+
+    <item
+        android:id="@+id/navReports"
+        android:icon="@drawable/report"
+        android:title="Reports" />
+    <item
+        android:id="@+id/navPatients"
+        android:icon="@drawable/disability"
+        android:title="Patients" />
+    <item
+        android:id="@+id/navDoctorSignOut"
+        android:icon="@drawable/logout"
+        android:title="Sign Out" />
+
+
+</menu>

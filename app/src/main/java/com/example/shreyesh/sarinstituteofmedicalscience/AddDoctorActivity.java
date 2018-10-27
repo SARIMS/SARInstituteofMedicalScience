@@ -295,33 +295,38 @@ public class AddDoctorActivity extends AppCompatActivity {
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
-                        String userid = firebaseAuth.getCurrentUser().getUid();
-                        HashMap<String, String> doctorMap = new HashMap<>();
-                        doctorMap.put("name", name);
-                        doctorMap.put("department", department);
-                        doctorMap.put("image", "default");
-                        doctorMap.put("sunday", sunday);
-                        doctorMap.put("monday", monday);
-                        doctorMap.put("tuesday", tuesday);
-                        doctorMap.put("wednesday", wednesday);
-                        doctorMap.put("thursday", thursday);
-                        doctorMap.put("friday", friday);
-                        doctorMap.put("saturday", saturday);
-                        doctorMap.put("userid", userid);
+                            String userid = task.getResult().getUser().getUid();
+                            HashMap<String, String> doctorMap = new HashMap<>();
+                            doctorMap.put("name", name);
+                            doctorMap.put("department", department);
+                            doctorMap.put("image", "default");
+                            doctorMap.put("sunday", sunday);
+                            doctorMap.put("monday", monday);
+                            doctorMap.put("tuesday", tuesday);
+                            doctorMap.put("wednesday", wednesday);
+                            doctorMap.put("thursday", thursday);
+                            doctorMap.put("friday", friday);
+                            doctorMap.put("saturday", saturday);
+                            doctorMap.put("userid", userid);
 
-                        doctorRef.child(userid).setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(AddDoctorActivity.this, "Registered Successfully", Toast.LENGTH_LONG).show();
-                                } else {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(AddDoctorActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            doctorRef.child(userid).setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(AddDoctorActivity.this, "Registered Successfully", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(AddDoctorActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(AddDoctorActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 

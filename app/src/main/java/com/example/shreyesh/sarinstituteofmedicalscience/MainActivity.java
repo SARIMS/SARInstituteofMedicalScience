@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
                 break;
             case R.id.aboutUs:
-                startActivity(new Intent(MainActivity.this, PatientHomeActivity.class));
+                startActivity(new Intent(MainActivity.this, DoctorHomeActivity.class));
                 break;
             case R.id.patientRedirect:
                 startActivity(new Intent(MainActivity.this, PatientLoginActivity.class));

@@ -54,7 +54,7 @@ public class AdminLoginActivity extends AppCompatActivity {
 
         //Set Toolbar
         setSupportActionBar(adminToolbar);
-        getSupportActionBar().setTitle("Admin Login");
+        getSupportActionBar().setTitle("SARIMS Login");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Login Button action
@@ -90,18 +90,22 @@ public class AdminLoginActivity extends AppCompatActivity {
                 }
 
 
+
                 progressDialog.show();
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressDialog.dismiss();
+                            System.out.println(type);
                             switch (type) {
                                 case "Admin":
                                     startActivity(new Intent(AdminLoginActivity.this, AdminHomeActivity.class));
                                     finish();
                                     break;
-                                case "Doctors":
+                                case "Doctor":
+                                    startActivity(new Intent(AdminLoginActivity.this, DoctorHomeActivity.class).putExtra("type", "Doctor"));
+                                    finish();
                                     break;
                                 case "Consultant":
                                     break;
