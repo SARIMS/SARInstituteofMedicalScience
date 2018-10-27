@@ -22,11 +22,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,7 +43,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
     private EditText appointmentDate, appointmentTime;
     private Button confirm;
     private String userid, username;
-    private DatabaseReference doctorRef, appointmentRef;
+    private DatabaseReference doctorRef, appointmentRef, aRef;
     private FirebaseAuth firebaseAuth;
     private TextView doctorsName;
     private String currentUserID;
@@ -78,8 +80,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
         doctorsName.setText("Dr. " + username);
 
         doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
-        appointmentRef = FirebaseDatabase.getInstance().getReference().child("appointments").child(currentUserID);
-
+        appointmentRef = FirebaseDatabase.getInstance().getReference().child("appointments");
+        aRef = appointmentRef.child(userid);
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -129,68 +131,137 @@ public class BookAppointmentActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         res = true;
-                        if (dataSnapshot.hasChildren()) {
-                            for (DataSnapshot d : dataSnapshot.getChildren()) {
-                                final String at = d.child("time").getValue().toString();
-                                final String ad = d.child("date").getValue().toString();
-                                final String id = d.child("doctorid").getValue().toString();
-                                final Date date1 = new Date(aDate);
-                                final Calendar current = Calendar.getInstance();
-                                current.set(Calendar.HOUR, 0);
-                                current.set(Calendar.MINUTE, 0);
-                                current.set(Calendar.SECOND, 0);
-                                current.set(Calendar.MILLISECOND, 0);
-                                final Date currentDate = current.getTime();
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.setTime(date1);
-                                int day = calendar.get(Calendar.DAY_OF_WEEK);
-                                final String dayOfWeek = days[day - 1];
-                                System.out.println("Day of week " + dayOfWeek);
-                                doctorRef.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (date1.before(currentDate)) {
-                                            Toast.makeText(BookAppointmentActivity.this, "Cannot select past date", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                        if (dataSnapshot.child(dayOfWeek.toLowerCase()).getValue().toString().equals("Not Available")) {
-                                            Toast.makeText(BookAppointmentActivity.this, "Doctor not available on this Day of the Week", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                        if (at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
-                                            res = false;
-                                            Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-                                        if (res) {
-                                            HashMap<String, String> appointmentMap = new HashMap<>();
-                                            appointmentMap.put("date", aDate);
-                                            appointmentMap.put("time", aTime);
-                                            appointmentMap.put("doctor", username);
-                                            appointmentMap.put("doctorid", userid);
-                                            appointmentRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(BookAppointmentActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(BookAppointmentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                            for (DataSnapshot d1 : dataSnapshot.getChildren()) {
+                                for (DataSnapshot d : d1.getChildren()) {
+                                    final String at = d.child("time").getValue().toString();
+                                    final String ad = d.child("date").getValue().toString();
+                                    final String id = d.child("doctorid").getValue().toString();
+                                    final Date date1 = new Date(aDate);
+                                    final Calendar current = Calendar.getInstance();
+                                    current.set(Calendar.HOUR, 0);
+                                    current.set(Calendar.MINUTE, 0);
+                                    current.set(Calendar.SECOND, 0);
+                                    current.set(Calendar.MILLISECOND, 0);
+                                    final Date currentDate = current.getTime();
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(date1);
+                                    int day = calendar.get(Calendar.DAY_OF_WEEK);
+                                    final String dayOfWeek = days[day - 1];
+                                    System.out.println("Day of week " + dayOfWeek);
+                                    doctorRef.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (date1.before(currentDate)) {
+                                                res = false;
+                                                Toast.makeText(BookAppointmentActivity.this, "Cannot select past date", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            if (dataSnapshot.child(dayOfWeek.toLowerCase()).getValue().toString().equals("Not Available")) {
+                                                res = false;
+                                                Toast.makeText(BookAppointmentActivity.this, "Doctor not available on this Day of the Week", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            if (at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
+                                                res = false;
+                                                Toast.makeText(BookAppointmentActivity.this, "Not Available at this time", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                            String[] t = dataSnapshot.child(dayOfWeek.toLowerCase()).getValue().toString().split("-");
+                                            String from = t[0];
+                                            String to = t[1];
+                                            String chosenAMPM = aTime.substring(aTime.length() - 2);
+                                            String[] chosenTime = aTime.substring(0, aTime.length() - 2).split(":");
+                                            if (chosenAMPM.equals("PM"))
+                                                chosenTime[0] = String.valueOf(Integer.parseInt(String.valueOf(Integer.parseInt(chosenTime[0].trim()) + 12)));
+                                            if ((Integer.parseInt(chosenTime[0].trim()) < Integer.parseInt(t[0].substring(0, t[0].length() - 2).trim())) &&
+                                                    Integer.parseInt(chosenTime[1].trim()) > Integer.parseInt(t[1].substring(0, t[1].length() - 2).trim())) {
+                                                Toast.makeText(BookAppointmentActivity.this, "Not Available at this time", Toast.LENGTH_SHORT).show();
+                                                res = false;
+                                                return;
+                                            }
+                                            if (res) {
+                                                System.out.println("This is ");
+                                                HashMap<String, String> appointmentMap = new HashMap<>();
+                                                appointmentMap.put("date", aDate);
+                                                appointmentMap.put("time", aTime);
+                                                appointmentMap.put("doctor", username);
+                                                appointmentMap.put("doctorid", userid);
+                                                aRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(BookAppointmentActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            Toast.makeText(BookAppointmentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
 
-                                        } else {
-                                            Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(BookAppointmentActivity.this, "Not Available", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                    if (res == false)
+                                        break;
+                                }
                             }
+                            if (res == false)
+                                return;
+
+                        } else {
+                            final Date date1 = new Date(aDate);
+                            final Calendar current = Calendar.getInstance();
+                            current.set(Calendar.HOUR, 0);
+                            current.set(Calendar.MINUTE, 0);
+                            current.set(Calendar.SECOND, 0);
+                            current.set(Calendar.MILLISECOND, 0);
+                            final Date currentDate = current.getTime();
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(date1);
+                            int day = calendar.get(Calendar.DAY_OF_WEEK);
+                            final String dayOfWeek = days[day - 1];
+                            if (date1.before(currentDate)) {
+                                Toast.makeText(BookAppointmentActivity.this, "Cannot select past date", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            doctorRef.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.child(dayOfWeek.toLowerCase()).getValue().toString().equals("Not Available")) {
+                                        Toast.makeText(BookAppointmentActivity.this, "Doctor not available on this Day of the Week", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    HashMap<String, String> appointmentMap = new HashMap<>();
+                                    appointmentMap.put("date", aDate);
+                                    appointmentMap.put("time", aTime);
+                                    appointmentMap.put("doctor", username);
+                                    appointmentMap.put("doctorid", userid);
+                                    aRef.push().setValue(appointmentMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(BookAppointmentActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(BookAppointmentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     }
                     @Override
