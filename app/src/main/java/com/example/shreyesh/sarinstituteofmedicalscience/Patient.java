@@ -8,6 +8,13 @@ public class Patient {
     public Patient() {
     }
 
+    public Patient(String name, String age, String gender, String image) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.image = image;
+    }
+
     public String getName() {
         return name;
     }

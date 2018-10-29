@@ -14,7 +14,7 @@
     <item
         android:id="@+id/adminConsultantManage"
         android:icon="@drawable/consulting"
-        android:title="Conultant Management" />
+        android:title="Consultant Management" />
     <item
         android:id="@+id/adminLogOut"
         android:icon="@drawable/logout"

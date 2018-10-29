@@ -1,10 +1,12 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -31,13 +33,16 @@ public class AddConsultantActivity extends AppCompatActivity {
     private DatabaseReference consultantRef;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
+    private Toolbar addConsultantToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_consultant);
 
-
+        addConsultantToolbar = (Toolbar) findViewById(R.id.addConsultantToolbar);
+        setSupportActionBar(addConsultantToolbar);
+        getSupportActionBar().setTitle("Add Consultant");
         addConsultant = (Button) findViewById(R.id.addConsulant);
         consultantAge = (TextInputLayout) findViewById(R.id.consultantRegAge);
         consultantEmail = (TextInputLayout) findViewById(R.id.consultantRegEmail);
@@ -100,6 +105,8 @@ public class AddConsultantActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         progressDialog.dismiss();
                                         Toast.makeText(AddConsultantActivity.this, "Consultant Added", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(AddConsultantActivity.this, AdminConsultantListActivity.class));
+                                        finish();
                                     } else {
                                         progressDialog.dismiss();
                                         Toast.makeText(AddConsultantActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

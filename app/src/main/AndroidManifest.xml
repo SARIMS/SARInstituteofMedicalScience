@@ -71,7 +71,9 @@
             android:name=".ConsultantHomeActivity"
             android:label="@string/title_activity_consultant_home"
             android:theme="@style/AppTheme" />
-        <activity android:name=".AddConsultantActivity"></activity>
+        <activity android:name=".AddConsultantActivity" />
+        <activity android:name=".AdminDoctorListActivity" />
+        <activity android:name=".AdminConsultantListActivity"></activity>
     </application>
 
 </manifest>
