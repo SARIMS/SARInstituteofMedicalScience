@@ -53,6 +53,7 @@ public class DoctorHomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_doctor_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.doctorHomeToolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Doctor Home");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -149,7 +150,8 @@ public class DoctorHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.doctorSettings) {
+            startActivity(new Intent(DoctorHomeActivity.this, SarimsStaffSettingsActivity.class).putExtra("type", "Doctor"));
             return true;
         }
 
@@ -165,7 +167,7 @@ public class DoctorHomeActivity extends AppCompatActivity
         if (id == R.id.navReports) {
             // Handle the camera action
         } else if (id == R.id.navPatients) {
-            startActivity(new Intent(DoctorHomeActivity.this, PatientManagementActivity.class).putExtra("Doctor", "Doctor"));
+            startActivity(new Intent(DoctorHomeActivity.this, PatientManagementActivity.class).putExtra("type", type));
 
 
         } else if (id == R.id.navDoctorSignOut) {

@@ -27,10 +27,10 @@ import java.util.HashMap;
 public class AddConsultantActivity extends AppCompatActivity {
 
     private Button addConsultant;
-    private TextInputLayout consultantName, consultantEmail, consultantPassword, consultantConfirmPassword, consultantAge;
+    private TextInputLayout consultantName, consultantEmail, consultantPassword, consultantConfirmPassword, consultantAge, consultantSpecialization;
     private RadioGroup consultantGenderGroup;
     private RadioButton male, female;
-    private DatabaseReference consultantRef;
+    private DatabaseReference consultantRef, consultantListRef;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
     private Toolbar addConsultantToolbar;
@@ -49,11 +49,13 @@ public class AddConsultantActivity extends AppCompatActivity {
         consultantName = (TextInputLayout) findViewById(R.id.consultantRegName);
         consultantPassword = (TextInputLayout) findViewById(R.id.consultantRegPassword);
         consultantConfirmPassword = (TextInputLayout) findViewById(R.id.consultantRegConfirmPassword);
+        consultantSpecialization = (TextInputLayout) findViewById(R.id.consultantSpecial);
         consultantGenderGroup = (RadioGroup) findViewById(R.id.consultantGender);
         male = (RadioButton) findViewById(R.id.consultantRegMale);
         female = (RadioButton) findViewById(R.id.consultantRegFemale);
 
         consultantRef = FirebaseDatabase.getInstance().getReference().child("consultants");
+        consultantListRef = FirebaseDatabase.getInstance().getReference().child("staff").child("consultant");
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait while we register...");
@@ -66,12 +68,13 @@ public class AddConsultantActivity extends AppCompatActivity {
                 RadioButton rb = (RadioButton) consultantGenderGroup.findViewById(consultantGenderGroup.getCheckedRadioButtonId());
                 final String gender = rb.getText().toString();
                 final String age = consultantAge.getEditText().getText().toString();
-                String email = consultantEmail.getEditText().getText().toString();
+                final String email = consultantEmail.getEditText().getText().toString();
                 String password = consultantPassword.getEditText().getText().toString();
                 String confirmPassword = consultantConfirmPassword.getEditText().getText().toString();
                 final String name = consultantName.getEditText().getText().toString();
+                final String special = consultantSpecialization.getEditText().getText().toString();
 
-                if (TextUtils.isEmpty(age) || TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+                if (TextUtils.isEmpty(age) || TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(special)) {
                     Toast.makeText(AddConsultantActivity.this, "Please fill all details", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -99,10 +102,12 @@ public class AddConsultantActivity extends AppCompatActivity {
                             consultantMap.put("gender", gender);
                             consultantMap.put("age", age);
                             consultantMap.put("image", "default");
+                            consultantMap.put("special", special);
                             consultantRef.child(userid).setValue(consultantMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        consultantListRef.push().child("email").setValue(email);
                                         progressDialog.dismiss();
                                         Toast.makeText(AddConsultantActivity.this, "Consultant Added", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(AddConsultantActivity.this, AdminConsultantListActivity.class));

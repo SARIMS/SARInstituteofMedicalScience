@@ -56,10 +56,12 @@ public class PatientManagementActivity extends AppCompatActivity {
 
         patientRef.keepSynced(true);
 
-        String type = getIntent().getStringExtra("Doctor");
+        String type = getIntent().getStringExtra("type");
         if (type != null) {
-            if (type.equals("Doctor"))
+            if (type.equals("Doctor") || type.equals("Consultant")) {
                 addPatient.setVisibility(View.GONE);
+                getSupportActionBar().setTitle("Patient List");
+            }
             addPatient.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

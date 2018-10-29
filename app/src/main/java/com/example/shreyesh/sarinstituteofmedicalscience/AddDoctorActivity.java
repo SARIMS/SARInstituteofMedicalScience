@@ -39,7 +39,7 @@ public class AddDoctorActivity extends AppCompatActivity {
     private EditText fromSunday, fromMonday, fromTuesday, fromWednesday, fromThursday, fromFriday, fromSaturday;
     private EditText toSunday, toMonday, toTuesday, toWednesday, toThursday, toFriday, toSaturday;
     private Toolbar addDoctorToolbar;
-    private DatabaseReference doctorRef;
+    private DatabaseReference doctorRef, doctorListRef;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
     private LinearLayout sundayLayout, mondayLayout, tuesdayLayout, wednesdayLayout, thursdayLayout, fridayLayout, saturdayLayout;
@@ -232,12 +232,13 @@ public class AddDoctorActivity extends AppCompatActivity {
         //firebase components
         firebaseAuth = FirebaseAuth.getInstance();
         doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
+        doctorListRef = FirebaseDatabase.getInstance().getReference().child("staff").child("doctor");
 
         addDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String name = doctorRegName.getEditText().getText().toString();
-                String email = doctorRegEmail.getEditText().getText().toString();
+                final String email = doctorRegEmail.getEditText().getText().toString();
                 final String department = doctorRegDepartment.getEditText().getText().toString();
                 String password = doctorRegPassword.getEditText().getText().toString();
                 String confirmPassword = doctorRegConfirmPassword.getEditText().getText().toString();
@@ -315,6 +316,7 @@ public class AddDoctorActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        doctorListRef.push().child("email").setValue(email);
                                         progressDialog.dismiss();
                                         Toast.makeText(AddDoctorActivity.this, "Registered Successfully", Toast.LENGTH_LONG).show();
                                     } else {

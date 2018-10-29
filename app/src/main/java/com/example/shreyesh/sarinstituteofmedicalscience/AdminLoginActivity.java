@@ -19,12 +19,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AdminLoginActivity extends AppCompatActivity {
 
     private Toolbar adminToolbar;
     private TextInputLayout adminPass, adminEmail;
     private Button adminLogin;
+    private DatabaseReference staffRef;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
     private RadioButton doctor, consultant, admin;
@@ -51,6 +57,7 @@ public class AdminLoginActivity extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        staffRef = FirebaseDatabase.getInstance().getReference().child("staff");
 
         //Set Toolbar
         setSupportActionBar(adminToolbar);
@@ -63,8 +70,8 @@ public class AdminLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Get Information from the input box in string format
-                String email = adminEmail.getEditText().getText().toString();
-                String password = adminPass.getEditText().getText().toString();
+                final String email = adminEmail.getEditText().getText().toString();
+                final String password = adminPass.getEditText().getText().toString();
 
 
                 RadioButton rb = (RadioButton) sarims.findViewById(sarims.getCheckedRadioButtonId());
@@ -90,34 +97,65 @@ public class AdminLoginActivity extends AppCompatActivity {
                 }
 
 
-
-                progressDialog.show();
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                staffRef.child(type.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            System.out.println(type);
-                            switch (type) {
-                                case "Admin":
-                                    startActivity(new Intent(AdminLoginActivity.this, AdminHomeActivity.class));
-                                    finish();
-                                    break;
-                                case "Doctor":
-                                    startActivity(new Intent(AdminLoginActivity.this, DoctorHomeActivity.class).putExtra("type", "Doctor"));
-                                    finish();
-                                    break;
-                                case "Consultant":
-                                    break;
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        boolean flag = false;
+                        if (!type.equals("Admin")) {
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                    String e = d.child("email").getValue().toString();
+                                    if (e.equals(email))
+                                        flag = true;
+                                }
+                            }
+                        } else
+                            flag = true;
+                        if (!flag) {
+                            Toast.makeText(AdminLoginActivity.this, type + " not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        progressDialog.show();
+                        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    System.out.println(type);
+                                    switch (type) {
+                                        case "Admin":
+                                            startActivity(new Intent(AdminLoginActivity.this, AdminHomeActivity.class));
+                                            finish();
+                                            break;
+                                        case "Doctor":
+                                            startActivity(new Intent(AdminLoginActivity.this, DoctorHomeActivity.class).putExtra("type", "Doctor"));
+                                            finish();
+                                            break;
+                                        case "Consultant":
+                                            startActivity(new Intent(AdminLoginActivity.this, ConsultantHomeActivity.class).putExtra("type", "Consultant"));
+                                            finish();
+                                            break;
+                                    }
+
+                                } else {
+                                    progressDialog.hide();
+                                    Toast.makeText(AdminLoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
 
-                        } else {
-                            progressDialog.hide();
-                            Toast.makeText(AdminLoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        });
+
+
                     }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
                 });
+
+
             }
         });
 

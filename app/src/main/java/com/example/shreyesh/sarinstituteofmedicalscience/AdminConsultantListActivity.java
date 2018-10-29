@@ -64,6 +64,8 @@ public class AdminConsultantListActivity extends AppCompatActivity {
             }
         });
 
+        consultantRef.keepSynced(true);
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

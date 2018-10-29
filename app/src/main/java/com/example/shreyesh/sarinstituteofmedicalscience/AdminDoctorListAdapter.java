@@ -9,37 +9,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ViewHolder> {
+public class AdminDoctorListAdapter extends RecyclerView.Adapter<AdminDoctorListAdapter.ViewHolder> {
     @NonNull
 
     private Context context;
     private List<Doctor> doctorList;
 
-    public DoctorListAdapter(List<Doctor> doctorList) {
+    public AdminDoctorListAdapter(List<Doctor> doctorList) {
         this.doctorList = doctorList;
     }
 
 
     @Override
-    public DoctorListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdminDoctorListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_single_layout, parent, false);
         context = parent.getContext();
-        return new ViewHolder(view);
+        return new AdminDoctorListAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DoctorListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdminDoctorListAdapter.ViewHolder holder, int position) {
         String name = doctorList.get(position).getName();
         String department = doctorList.get(position).getDepartment();
         String monday = doctorList.get(position).getMonday();
@@ -49,8 +45,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
         String friday = doctorList.get(position).getFriday();
         String saturday = doctorList.get(position).getSaturday();
         String sunday = doctorList.get(position).getSunday();
-        String userid = doctorList.get(position).getUserid();
         String image = doctorList.get(position).getImage();
+
 
         holder.setname(name);
         holder.setDepartment(department);
@@ -62,8 +58,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
         holder.setFriday(friday);
         holder.setSaturday(saturday);
 
+
+        holder.setBookingButton();
         holder.setImage(image);
-        holder.setBookingButton(userid, name);
 
 
     }
@@ -128,17 +125,10 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
             sat.setText(time);
         }
 
-        public void setBookingButton(final String userid, final String username) {
+        public void setBookingButton() {
             Button button = (Button) view.findViewById(R.id.bookAppointmentSingle);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, BookAppointmentActivity.class);
-                    intent.putExtra("userid", userid);
-                    intent.putExtra("username", username);
-                    context.startActivity(intent);
-                }
-            });
+            button.setVisibility(View.GONE);
+
         }
 
         public void setImage(String img) {
@@ -148,3 +138,4 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
     }
 
 }
+

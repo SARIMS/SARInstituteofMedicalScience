@@ -49,7 +49,7 @@ public class ConsultantHomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_consultant_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.consultantHomeToolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle(" Consultant Home");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,7 +72,7 @@ public class ConsultantHomeActivity extends AppCompatActivity
 
         type = getIntent().getStringExtra("type");
         if (type != null) {
-            if (!type.equals("consultant")) {
+            if (!type.equals("Consultant")) {
                 firebaseAuth.signOut();
                 startActivity(new Intent(ConsultantHomeActivity.this, AdminLoginActivity.class));
                 finish();
@@ -149,7 +149,8 @@ public class ConsultantHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.consultantSettings) {
+            startActivity(new Intent(ConsultantHomeActivity.this, SarimsStaffSettingsActivity.class).putExtra("type", "Consultant"));
             return true;
         }
 
@@ -165,9 +166,12 @@ public class ConsultantHomeActivity extends AppCompatActivity
         if (id == R.id.navConsultantReport) {
             // Handle the camera action
         } else if (id == R.id.navConsultantPatients) {
+            startActivity(new Intent(ConsultantHomeActivity.this, PatientManagementActivity.class).putExtra("type", type));
 
         } else if (id == R.id.navConsultantSignOut) {
-
+            firebaseAuth.signOut();
+            startActivity(new Intent(ConsultantHomeActivity.this, AdminLoginActivity.class));
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
