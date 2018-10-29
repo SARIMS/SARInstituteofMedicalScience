@@ -166,6 +166,7 @@ public class DoctorHomeActivity extends AppCompatActivity
 
         if (id == R.id.navReports) {
             // Handle the camera action
+            startActivity(new Intent(DoctorHomeActivity.this, SelectPatientActivity.class).putExtra("type", "inpatients"));
         } else if (id == R.id.navPatients) {
             startActivity(new Intent(DoctorHomeActivity.this, PatientManagementActivity.class).putExtra("type", type));
 
@@ -209,7 +210,6 @@ public class DoctorHomeActivity extends AppCompatActivity
 
             }
         };
-
         noticeList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.notifyDataSetChanged();
         firebaseRecyclerAdapter.startListening();

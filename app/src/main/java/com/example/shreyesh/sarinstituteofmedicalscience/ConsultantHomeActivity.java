@@ -165,6 +165,7 @@ public class ConsultantHomeActivity extends AppCompatActivity
 
         if (id == R.id.navConsultantReport) {
             // Handle the camera action
+            startActivity(new Intent(ConsultantHomeActivity.this, SelectPatientActivity.class).putExtra("type", "outpatients"));
         } else if (id == R.id.navConsultantPatients) {
             startActivity(new Intent(ConsultantHomeActivity.this, PatientManagementActivity.class).putExtra("type", type));
 

@@ -62,13 +62,14 @@ public class PatientManagementActivity extends AppCompatActivity {
                 addPatient.setVisibility(View.GONE);
                 getSupportActionBar().setTitle("Patient List");
             }
-            addPatient.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(PatientManagementActivity.this, AddPatientActivity.class));
-                }
-            });
+
         }
+        addPatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PatientManagementActivity.this, AddPatientActivity.class));
+            }
+        });
         inRef.keepSynced(true);
         outRef.keepSynced(true);
 

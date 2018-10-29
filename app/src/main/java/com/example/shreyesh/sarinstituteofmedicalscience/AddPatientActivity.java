@@ -172,6 +172,7 @@ public class AddPatientActivity extends AppCompatActivity {
                                 patientMap.put("address", pAddress);
                                 patientMap.put("nationality", pNationality);
                                 patientMap.put("department", pDepartment);
+                                patientMap.put("id", uid);
                                 patientTypeRef.child(uid).setValue(patientMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -196,6 +197,7 @@ public class AddPatientActivity extends AppCompatActivity {
                                 patientMap.put("nationality", pNationality);
                                 patientMap.put("department", pDepartment);
                                 patientMap.put("treatment", pTreatment);
+                                patientMap.put("id", uid);
                                 patientTypeRef.child(uid).setValue(patientMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
