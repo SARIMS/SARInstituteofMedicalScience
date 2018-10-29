@@ -26,4 +26,5 @@
         completions."
     </string>
     <string name="title_activity_doctor_home">DoctorHomeActivity</string>
+    <string name="title_activity_consultant_home">ConsultantHomeActivity</string>
 </resources>

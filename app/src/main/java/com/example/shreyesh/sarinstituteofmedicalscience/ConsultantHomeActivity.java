@@ -1,14 +1,11 @@
 package com.example.shreyesh.sarinstituteofmedicalscience;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,35 +26,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.io.Console;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PatientHomeActivity extends AppCompatActivity
+public class ConsultantHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
     private List<Appointment> appointmentList;
     private AppointmentRecyclerAdapter appointmentRecyclerAdapter;
-    private RecyclerView appointmentsReclcyerView, noticeList;
-    private DatabaseReference reportsRef, userRef, noticeRef,appointmentRef;
+    private RecyclerView reportsRecyclerView, noticeList;
+    private DatabaseReference reportsRef, consultantRef, noticeRef, appointmentRef;
     private FirebaseAuth firebaseAuth;
     private String type;
-    private TextView patientHeaderEmail, patientHeaderName;
-    private CircleImageView patientImage;
+    private TextView consultantHeaderEmail, consultantHeaderName;
+    private CircleImageView consultantImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_home);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.patientHomeToolbar);
+        setContentView(R.layout.activity_consultant_home);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.consultantHomeToolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Patient Home");
+        getSupportActionBar().setTitle("Home");
 
-
-        type = getIntent().getStringExtra("type");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -69,46 +61,55 @@ public class PatientHomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         View headerView = navigationView.getHeaderView(0);
-        patientHeaderEmail = (TextView) headerView.findViewById(R.id.patientHeaderEmail);
-        patientHeaderName = (TextView) headerView.findViewById(R.id.patientHeaderName);
-        patientImage = (CircleImageView) headerView.findViewById(R.id.patientImage);
+        consultantHeaderEmail = (TextView) headerView.findViewById(R.id.consultantEmailHeader);
+        consultantHeaderName = (TextView) headerView.findViewById(R.id.consultantNameHeader);
+        consultantImage = (CircleImageView) headerView.findViewById(R.id.consultantImage);
 
-
+        noticeList = (RecyclerView) findViewById(R.id.consultantNoticeList);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        type = getIntent().getStringExtra("type");
+        if (type != null) {
+            if (!type.equals("consultant")) {
+                firebaseAuth.signOut();
+                startActivity(new Intent(ConsultantHomeActivity.this, AdminLoginActivity.class));
+                finish();
+            }
+        }
+
         String userid = firebaseAuth.getCurrentUser().getUid();
         String email = firebaseAuth.getCurrentUser().getEmail();
 
+        System.out.println(email);
 
         if (firebaseAuth != null) {
 
-            patientHeaderEmail.setText(email);
+            consultantHeaderEmail.setText(email);
         }
 
-        reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
-        userRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type).child(userid);
+        // reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
+        consultantRef = FirebaseDatabase.getInstance().getReference().child("consultants").child(userid);
         noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
-        appointmentRef = FirebaseDatabase.getInstance().getReference().child("appointments").child(userid);
 
         //keep data synced for offline
-        userRef.keepSynced(true);
-        reportsRef.keepSynced(true);
+        consultantRef.keepSynced(true);
+        //      reportsRef.keepSynced(true);
         noticeRef.keepSynced(true);
 
-        userRef.addValueEventListener(new ValueEventListener() {
+
+        System.out.println(userid);
+        consultantRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    System.out.println("Hiiii");
                     String name = dataSnapshot.child("name").getValue().toString();
-                    patientHeaderName.setText(name);
+                    consultantHeaderName.setText(name);
                     String image = dataSnapshot.child("image").getValue().toString();
-                    Picasso.get().load(image).placeholder(R.drawable.avatarplaceholder).into(patientImage);
-                } else {
-                    Toast.makeText(PatientHomeActivity.this, "Wrong Patient Type", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));
-                    finish();
+                    Picasso.get().load(image).placeholder(R.drawable.avatarplaceholder).into(consultantImage);
                 }
-
             }
 
             @Override
@@ -117,45 +118,11 @@ public class PatientHomeActivity extends AppCompatActivity
             }
         });
 
-
-        noticeList = (RecyclerView) findViewById(R.id.patientHomeReportList);
         noticeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
 
 
-
-        appointmentsReclcyerView=(RecyclerView)findViewById(R.id.appointmentsRecyclerView);
-        appointmentsReclcyerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        appointmentList=new ArrayList<>();
-        appointmentRecyclerAdapter=new AppointmentRecyclerAdapter(appointmentList);
-        appointmentsReclcyerView.setAdapter(appointmentRecyclerAdapter);
-
-
-        appointmentRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot d:dataSnapshot.getChildren()) {
-                    String date = d.child("date").getValue().toString();
-                    String time = d.child("time").getValue().toString();
-                    String doctor = d.child("doctor").getValue().toString();
-                    appointmentList.add(new Appointment("Dr " + doctor, time, date));
-                    appointmentRecyclerAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        //Database Sync
-        userRef.keepSynced(true);
-        reportsRef.keepSynced(true);
-        appointmentRef.keepSynced(true);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -170,7 +137,7 @@ public class PatientHomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.patient_home, menu);
+        getMenuInflater().inflate(R.menu.consultant_home, menu);
         return true;
     }
 
@@ -182,10 +149,7 @@ public class PatientHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.patientLogOut) {
-            firebaseAuth.signOut();
-            startActivity(new Intent(PatientHomeActivity.this, PatientLoginActivity.class));
-            finish();
+        if (id == R.id.action_settings) {
             return true;
         }
 
@@ -198,17 +162,11 @@ public class PatientHomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.navDocSchedule) {
-            startActivity(new Intent(PatientHomeActivity.this, DoctorsListActivity.class));
+        if (id == R.id.navConsultantReport) {
             // Handle the camera action
-        } else if (id == R.id.navRequestService) {
-            startActivity(new Intent(PatientHomeActivity.this, ServicesActivity.class).putExtra("type", type));
+        } else if (id == R.id.navConsultantPatients) {
 
-        } else if (id == R.id.navBills) {
-            startActivity(new Intent(PatientHomeActivity.this, ViewBillsActivity.class));
-
-        } else if (id == R.id.navSettings) {
-            startActivity(new Intent(PatientHomeActivity.this, AccountSettingsActivity.class).putExtra("type", type));
+        } else if (id == R.id.navConsultantSignOut) {
 
         }
 
@@ -234,7 +192,7 @@ public class PatientHomeActivity extends AppCompatActivity
                 noticeList.setLongClickable(true);
 
                 final String id = getRef(position).getKey();
-                final Intent intent = new Intent(PatientHomeActivity.this, ViewNoticeActivity.class);
+                final Intent intent = new Intent(ConsultantHomeActivity.this, ViewNoticeActivity.class);
                 intent.putExtra("id", id);
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -251,3 +209,4 @@ public class PatientHomeActivity extends AppCompatActivity
         firebaseRecyclerAdapter.startListening();
     }
 }
+

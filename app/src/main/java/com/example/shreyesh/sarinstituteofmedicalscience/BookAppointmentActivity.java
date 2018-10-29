@@ -82,7 +82,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
         doctorRef = FirebaseDatabase.getInstance().getReference().child("doctors");
         appointmentRef = FirebaseDatabase.getInstance().getReference().child("appointments");
-        aRef = appointmentRef.child(userid);
+        aRef = appointmentRef.child(currentUserID);
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {

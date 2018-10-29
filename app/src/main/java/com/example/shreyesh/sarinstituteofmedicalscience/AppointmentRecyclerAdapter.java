@@ -36,7 +36,7 @@ public class AppointmentRecyclerAdapter extends RecyclerView.Adapter<Appointment
 
         holder.setAppointmentDate(date);
         holder.setAppointmentTime(time);
-        holder.setDoctorName(doctorName);
+        holder.setDName(doctorName);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AppointmentRecyclerAdapter extends RecyclerView.Adapter<Appointment
             view=itemView;
         }
 
-        public void setDoctorName(String dname){
+        public void setDName(String dname) {
             TextView doctorName=(TextView)view.findViewById(R.id.appointmentSingleDoctorName);
             doctorName.setText(dname);
         }

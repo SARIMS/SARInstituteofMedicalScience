@@ -12,6 +12,10 @@
         android:icon="@drawable/doctor"
         android:title="Doctor Management"></item>
     <item
+        android:id="@+id/adminConsultantManage"
+        android:icon="@drawable/consulting"
+        android:title="Conultant Management" />
+    <item
         android:id="@+id/adminLogOut"
         android:icon="@drawable/logout"
         android:title="Log Out" />

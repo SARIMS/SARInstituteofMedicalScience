@@ -96,7 +96,7 @@ public class DoctorHomeActivity extends AppCompatActivity
         noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
 
         //keep data synced for offline
-//        doctorRef.keepSynced(true);
+        doctorRef.keepSynced(true);
         //      reportsRef.keepSynced(true);
         noticeRef.keepSynced(true);
 
@@ -112,7 +112,6 @@ public class DoctorHomeActivity extends AppCompatActivity
                     String image = dataSnapshot.child("image").getValue().toString();
                     Picasso.get().load(image).placeholder(R.drawable.avatarplaceholder).into(doctorImage);
                 }
-
             }
 
             @Override
@@ -121,40 +120,7 @@ public class DoctorHomeActivity extends AppCompatActivity
             }
         });
 
-
         noticeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
-
-
-        // appointmentsReclcyerView=(RecyclerView)findViewById(R.id.appointmentsRecyclerView);
-        //  appointmentsReclcyerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //appointmentList=new ArrayList<>();
-        // appointmentRecyclerAdapter=new AppointmentRecyclerAdapter(appointmentList);
-
-        /*appointmentRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot d:dataSnapshot.getChildren()) {
-                    String date = d.child("date").getValue().toString();
-                    String time = d.child("time").getValue().toString();
-                    String doctor = d.child("doctor").getValue().toString();
-                    appointmentList.add(new Appointment(doctor,time,date));
-                    appointmentRecyclerAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
-        //Database Sync
-        //doctorRef.keepSynced(true);
-        //reportsRef.keepSynced(true);
-        //appointmentRef.keepSynced(true);
-
 
     }
 
