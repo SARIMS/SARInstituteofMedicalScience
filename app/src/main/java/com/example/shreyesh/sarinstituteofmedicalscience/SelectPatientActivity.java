@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SelectPatientActivity extends AppCompatActivity {
 
-    private String type;
+    private String type, staff;
     private Toolbar selectPatientToolbar;
     private DatabaseReference patientRef;
     private RecyclerView selectPatientRecyclerView;
@@ -36,11 +36,12 @@ public class SelectPatientActivity extends AppCompatActivity {
         selectPatientRecyclerView = (RecyclerView) findViewById(R.id.selectPatientRecyclerView);
         selectPatientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        type = getIntent().getStringExtra("type");
+        staff = getIntent().getStringExtra("staff");
         selectedPatients = new ArrayList<>();
-        selectPatientAdapter = new SelectPatientAdapter(selectedPatients);
+        selectPatientAdapter = new SelectPatientAdapter(selectedPatients, staff);
         selectPatientRecyclerView.setAdapter(selectPatientAdapter);
 
-        type = getIntent().getStringExtra("type");
 
         patientRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type);
 

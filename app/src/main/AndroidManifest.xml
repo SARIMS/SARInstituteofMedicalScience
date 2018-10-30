@@ -75,7 +75,8 @@
         <activity android:name=".AdminDoctorListActivity" />
         <activity android:name=".AdminConsultantListActivity" />
         <activity android:name=".SarimsStaffSettingsActivity" />
-        <activity android:name=".SelectPatientActivity"></activity>
+        <activity android:name=".SelectPatientActivity" />
+        <activity android:name=".AddReportActivity"></activity>
     </application>
 
 </manifest>

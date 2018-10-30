@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,11 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
         this.pid = pid;
     }
 
+    public SelectPatientAdapter(List<SelectedPatient> patientList, String pid) {
+        this.patientList = patientList;
+        this.pid = pid;
+    }
+
     @NonNull
     @Override
     public SelectPatientAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,8 +50,8 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
     @Override
     public void onBindViewHolder(@NonNull SelectPatientAdapter.ViewHolder holder, int position) {
         String image = patientList.get(position).getImage();
-        String name = patientList.get(position).getName();
-        String id = patientList.get(position).getUserid();
+        final String name = patientList.get(position).getName();
+        final String id = patientList.get(position).getUserid();
 
         holder.setName(name);
         holder.setSelectPatientImage(image);
@@ -61,10 +67,13 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i) {
                             case 0:
-                                Toast.makeText(context, "Your select 1", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                Toast.makeText(context, "Your select 2", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(context, AddReportActivity.class);
+                                intent.putExtra("type", pid);
+                                intent.putExtra("name", name);
+                                intent.putExtra("pid", id);
+                                context.startActivity(intent);
                                 break;
                         }
                     }
