@@ -44,7 +44,7 @@ public class PatientHomeActivity extends AppCompatActivity
     private RecyclerView appointmentsReclcyerView, noticeList;
     private DatabaseReference reportsRef, userRef, noticeRef,appointmentRef;
     private FirebaseAuth firebaseAuth;
-    private String type;
+    private String type, pid;
     private TextView patientHeaderEmail, patientHeaderName;
     private CircleImageView patientImage;
 
@@ -85,6 +85,7 @@ public class PatientHomeActivity extends AppCompatActivity
             patientHeaderEmail.setText(email);
         }
 
+        pid = firebaseAuth.getCurrentUser().getUid();
         reportsRef = FirebaseDatabase.getInstance().getReference().child("reports").child(userid);
         userRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type).child(userid);
         noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
@@ -210,6 +211,8 @@ public class PatientHomeActivity extends AppCompatActivity
         } else if (id == R.id.navSettings) {
             startActivity(new Intent(PatientHomeActivity.this, AccountSettingsActivity.class).putExtra("type", type));
 
+        } else if (id == R.id.navPatientReports) {
+            startActivity(new Intent(PatientHomeActivity.this, AllReportsActivity.class).putExtra("pid", pid));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

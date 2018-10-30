@@ -9,9 +9,13 @@
             android:icon="@drawable/baseline_schedule_black_18dp"
             android:title="Schedule Appointment" />
         <item
-            android:id="@+id/navRequestService"
-            android:icon="@drawable/health"
-            android:title="Services" />
+            android:id="@+id/navPatientReports"
+            android:icon="@drawable/report"
+            android:title="View Reports" />
+    <item
+        android:id="@+id/navRequestService"
+        android:icon="@drawable/health"
+        android:title="Services" />
         <item
             android:id="@+id/navBills"
             android:icon="@drawable/bill"
