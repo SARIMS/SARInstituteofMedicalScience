@@ -53,6 +53,7 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
         final String name = patientList.get(position).getName();
         final String id = patientList.get(position).getUserid();
 
+
         holder.setName(name);
         holder.setSelectPatientImage(image);
 
@@ -67,6 +68,9 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i) {
                             case 0:
+                                Intent intent1 = new Intent(context, AllReportsActivity.class);
+                                intent1.putExtra("pid", id);
+                                context.startActivity(intent1);
                                 break;
                             case 1:
                                 Intent intent = new Intent(context, AddReportActivity.class);

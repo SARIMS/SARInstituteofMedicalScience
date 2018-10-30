@@ -76,7 +76,9 @@
         <activity android:name=".AdminConsultantListActivity" />
         <activity android:name=".SarimsStaffSettingsActivity" />
         <activity android:name=".SelectPatientActivity" />
-        <activity android:name=".AddReportActivity"></activity>
+        <activity android:name=".AddReportActivity" />
+        <activity android:name=".ViewReportsActivity" />
+        <activity android:name=".AllReportsActivity"></activity>
     </application>
 
 </manifest>

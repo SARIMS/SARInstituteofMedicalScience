@@ -166,7 +166,7 @@ public class DoctorHomeActivity extends AppCompatActivity
 
         if (id == R.id.navReports) {
             // Handle the camera action
-            startActivity(new Intent(DoctorHomeActivity.this, SelectPatientActivity.class).putExtra("type", "inpatients"));
+            startActivity(new Intent(DoctorHomeActivity.this, SelectPatientActivity.class).putExtra("type", "inpatients").putExtra("staff", "doctors"));
         } else if (id == R.id.navPatients) {
             startActivity(new Intent(DoctorHomeActivity.this, PatientManagementActivity.class).putExtra("type", type));
 
