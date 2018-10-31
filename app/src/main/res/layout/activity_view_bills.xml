@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".ViewBillsActivity">
 
@@ -52,6 +53,16 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/billList"
         android:layout_width="0dp"
@@ -100,6 +111,15 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="0dp"
@@ -118,7 +138,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:padding="5dp"
-            android:text="Grand Total"
+            android:text="Grand Total(Inc. GST)"
             android:textColor="@android:color/black"
             android:textSize="16dp"
             android:textStyle="bold" />

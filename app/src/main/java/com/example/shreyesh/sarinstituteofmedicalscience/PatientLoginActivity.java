@@ -90,6 +90,7 @@ public class PatientLoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(PatientLoginActivity.this, PatientHomeActivity.class);
                             intent.putExtra("type", type.toLowerCase());
                             startActivity(intent);
+                            finish();
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(PatientLoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();

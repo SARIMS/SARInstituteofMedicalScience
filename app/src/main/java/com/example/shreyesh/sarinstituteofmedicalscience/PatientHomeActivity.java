@@ -253,4 +253,5 @@ public class PatientHomeActivity extends AppCompatActivity
         firebaseRecyclerAdapter.notifyDataSetChanged();
         firebaseRecyclerAdapter.startListening();
     }
+
 }
