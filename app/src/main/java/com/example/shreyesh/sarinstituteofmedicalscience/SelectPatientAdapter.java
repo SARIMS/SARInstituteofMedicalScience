@@ -53,7 +53,6 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
         final String name = patientList.get(position).getName();
         final String id = patientList.get(position).getUserid();
 
-
         holder.setName(name);
         holder.setSelectPatientImage(image);
 

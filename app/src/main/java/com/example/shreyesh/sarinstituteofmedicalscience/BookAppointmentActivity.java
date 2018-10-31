@@ -55,6 +55,8 @@ public class BookAppointmentActivity extends AppCompatActivity {
     private int minute = mcurrentTime.get(Calendar.MINUTE);
     private TimePickerDialog mTimePicker;
     private int c = 0;
+    private Date actualFrom, actualTo;
+    private String from, to, chosenTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +162,9 @@ public class BookAppointmentActivity extends AppCompatActivity {
                                     System.out.println(ad);
                                     System.out.println(id);
 
+                                    final SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+                                    final SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+
                                     if (at.equals(aTime) && ad.equals(aDate) && id.equals(userid)) {
                                         res = false;
                                         Toast.makeText(BookAppointmentActivity.this, "Not Available at this time", Toast.LENGTH_SHORT).show();
@@ -177,6 +182,28 @@ public class BookAppointmentActivity extends AppCompatActivity {
                                             } else {
                                                 if (c == 0) {
                                                     System.out.println("This is ");
+                                                    String time[] = dataSnapshot.child(dayOfWeek.toLowerCase()).getValue().toString().split("-");
+                                                    try {
+                                                        actualFrom = parseFormat.parse(time[0].substring(0, time[0].length() - 2) + ":00 " + time[0].substring(time[0].length() - 2));
+                                                        actualTo = parseFormat.parse(time[1].substring(0, time[1].length() - 2) + ":00 " + time[1].substring(time[1].length() - 2));
+                                                        from = displayFormat.format(actualFrom);
+                                                        to = displayFormat.format(actualTo);
+                                                        from = from.substring(0, from.indexOf(":"));
+                                                        to = to.substring(0, to.indexOf(":"));
+                                                        Date d = parseFormat.parse(aTime);
+                                                        chosenTime = displayFormat.format(d);
+                                                        chosenTime = chosenTime.substring(0, chosenTime.indexOf(":"));
+
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                    System.out.println(from);
+                                                    System.out.println(to);
+                                                    if (!(Integer.parseInt(chosenTime) >= Integer.parseInt(from) && Integer.parseInt(chosenTime) <= Integer.parseInt(to))) {
+                                                        Toast.makeText(BookAppointmentActivity.this, "Time Outside Doctor's Hours", Toast.LENGTH_SHORT).show();
+                                                        c = 1;
+                                                        return;
+                                                    }
                                                     HashMap<String, String> appointmentMap = new HashMap<>();
                                                     appointmentMap.put("date", aDate);
                                                     appointmentMap.put("time", aTime);
