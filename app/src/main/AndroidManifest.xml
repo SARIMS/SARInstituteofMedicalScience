@@ -78,7 +78,10 @@
         <activity android:name=".SelectPatientActivity" />
         <activity android:name=".AddReportActivity" />
         <activity android:name=".ViewReportsActivity" />
-        <activity android:name=".AllReportsActivity"></activity>
+        <activity android:name=".AllReportsActivity" />
+        <activity
+            android:name=".AboutUsActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

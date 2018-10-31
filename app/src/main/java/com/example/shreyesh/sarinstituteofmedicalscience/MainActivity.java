@@ -8,14 +8,17 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar homeToolbar;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private SectionsPagerAdapter pagerAdapter;
+    private TextView admin, patient, consultant, aboutus, doctor;
+    private ImageView adminImage, patientImage, doctorImage, consultantImage, aboutUsImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,46 +27,92 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialise
         homeToolbar = (Toolbar) findViewById(R.id.homeToolbar);
-        viewPager = (ViewPager) findViewById(R.id.tabPager);
-        tabLayout = (TabLayout) findViewById(R.id.mainTabs);
+
+        admin = (TextView) findViewById(R.id.homeAdminText);
+        patient = (TextView) findViewById(R.id.homePatientText);
+        doctor = (TextView) findViewById(R.id.homeDoctorText);
+        consultant = (TextView) findViewById(R.id.homeConsultantText);
+        aboutus = (TextView) findViewById(R.id.homeAboutUsTextView);
+
+        adminImage = (ImageView) findViewById(R.id.homeAdminImage);
+        patientImage = (ImageView) findViewById(R.id.homePatientImage);
+        doctorImage = (ImageView) findViewById(R.id.homeDoctorImage);
+        consultantImage = (ImageView) findViewById(R.id.homeConsultantImage);
+        aboutUsImage = (ImageView) findViewById(R.id.homeAboutUsImage);
+
+
+        //TextView Listener
+        admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
+            }
+        });
+        adminImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
+            }
+        });
+
+        doctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
+            }
+        });
+        doctorImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
+            }
+        });
+
+        consultantImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
+            }
+        });
+        consultant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
+            }
+        });
+
+        patientImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, PatientLoginActivity.class));
+            }
+        });
+        patient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, PatientLoginActivity.class));
+            }
+        });
+
+        aboutUsImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
+            }
+        });
+        aboutus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
+            }
+        });
 
         //Setup Toolbar
         setSupportActionBar(homeToolbar);
-        getSupportActionBar().setTitle("Home");
-
-        //setup tabs
-        pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(0);                    //Default page when app opens
+        getSupportActionBar().setTitle("S.A.R.I.M.S Home");
 
     }
 
 
-    //Setting Up Toolbar Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.home_toolbar_menu, menu);
-        return true;
-    }
 
-
-    //Defining actions for the options in Toolbar Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.adminRedirect:
-                startActivity(new Intent(MainActivity.this, AdminLoginActivity.class));
-                break;
-            case R.id.aboutUs:
-                startActivity(new Intent(MainActivity.this, DoctorHomeActivity.class));
-                break;
-            case R.id.patientRedirect:
-                startActivity(new Intent(MainActivity.this, PatientLoginActivity.class));
-                break;
-            default:
-                Toast.makeText(MainActivity.this, "Invalid Option", Toast.LENGTH_LONG).show();
-        }
-        return true;
-    }
 }
