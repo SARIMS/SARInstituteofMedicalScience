@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/adminRedirect"
-        android:title="Admin Login" />
-    <item
-        android:id="@+id/patientRedirect"
-        android:title="Patient Login" />
-    <item
-        android:id="@+id/aboutUs"
-        android:title="About Us" />
+        android:id="@+id/addRecommendation"
+        android:title="Add Recommendation" />
 </menu>
