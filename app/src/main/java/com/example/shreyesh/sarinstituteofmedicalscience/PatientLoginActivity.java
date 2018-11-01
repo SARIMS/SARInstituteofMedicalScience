@@ -28,6 +28,7 @@ public class PatientLoginActivity extends AppCompatActivity {
 
 
     private Toolbar patientLoginToolbar;
+    private TextView regPatient;
     private ProgressDialog progressDialog;
     private Button patientLoginButton;
     private FirebaseAuth firebaseAuth;
@@ -46,6 +47,8 @@ public class PatientLoginActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Patient Login");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        regPatient = (TextView) findViewById(R.id.regPatientLoginPage);
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
@@ -99,6 +102,13 @@ public class PatientLoginActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        regPatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PatientLoginActivity.this, AddPatientActivity.class));
             }
         });
 

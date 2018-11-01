@@ -23,10 +23,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 public class PatientDetailsActivtity extends AppCompatActivity {
 
@@ -97,8 +103,6 @@ public class PatientDetailsActivtity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.home_toolbar_menu, menu);
         return true;
     }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -118,14 +122,26 @@ public class PatientDetailsActivtity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     String r = editText.getText().toString();
-                    recRef.push().child("rec").setValue(r).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    final Calendar current = Calendar.getInstance();
+                    current.set(Calendar.HOUR, 0);
+                    current.set(Calendar.MINUTE, 0);
+                    current.set(Calendar.SECOND, 0);
+                    current.set(Calendar.MILLISECOND, 0);
+                    final Date currentDate = current.getTime();
+                    SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date1 = new Date();
+                    String da = sfd.format(date1);
+
+                    HashMap<String, String> recMap = new HashMap<>();
+                    recMap.put("rec", r);
+                    recMap.put("date", da);
+                    recRef.push().setValue(recMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Toast.makeText(PatientDetailsActivtity.this, "Recommendation added", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     });
-
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -134,13 +150,11 @@ public class PatientDetailsActivtity extends AppCompatActivity {
                     return;
                 }
             });
-
             Dialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

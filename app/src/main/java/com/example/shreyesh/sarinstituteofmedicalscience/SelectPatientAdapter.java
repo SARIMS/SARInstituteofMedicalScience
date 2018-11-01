@@ -59,7 +59,7 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] option = {"View Reports", "Add New Report"};
+                String[] option = {"View Reports", "Add New Report", "View Recommendations"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Select");
                 builder.setItems(option, new DialogInterface.OnClickListener() {
@@ -77,6 +77,11 @@ public class SelectPatientAdapter extends RecyclerView.Adapter<SelectPatientAdap
                                 intent.putExtra("name", name);
                                 intent.putExtra("pid", id);
                                 context.startActivity(intent);
+                                break;
+                            case 2:
+                                Intent intent2 = new Intent(context, ViewRecommendationActivity.class);
+                                intent2.putExtra("pid", id);
+                                context.startActivity(intent2);
                                 break;
                         }
                     }

@@ -23,5 +23,5 @@
         <item
             android:id="@+id/navSettings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Account Settings" />
+            android:title="Profile" />
 </menu>

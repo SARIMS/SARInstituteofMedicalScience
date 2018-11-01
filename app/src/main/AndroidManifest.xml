@@ -81,7 +81,8 @@
         <activity android:name=".AllReportsActivity" />
         <activity
             android:name=".AboutUsActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".ViewRecommendationActivity"></activity>
     </application>
 
 </manifest>

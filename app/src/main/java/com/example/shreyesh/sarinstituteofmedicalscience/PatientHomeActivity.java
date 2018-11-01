@@ -31,7 +31,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.Console;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,14 +41,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PatientHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private List<Appointment> appointmentList;
+    private List<Appointment> appointmentList, recList;
     private AppointmentRecyclerAdapter appointmentRecyclerAdapter;
-    private RecyclerView appointmentsReclcyerView, noticeList;
-    private DatabaseReference reportsRef, userRef, noticeRef,appointmentRef;
+    private RecyclerView appointmentsReclcyerView, noticeList, recRecyclerView;
+    private DatabaseReference reportsRef, userRef, noticeRef, appointmentRef, recRef;
     private FirebaseAuth firebaseAuth;
     private String type, pid;
     private TextView patientHeaderEmail, patientHeaderName;
     private CircleImageView patientImage;
+    private RecommendationAdapter recommendationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,7 @@ public class PatientHomeActivity extends AppCompatActivity
         userRef = FirebaseDatabase.getInstance().getReference().child("patients").child(type).child(userid);
         noticeRef = FirebaseDatabase.getInstance().getReference().child("notices");
         appointmentRef = FirebaseDatabase.getInstance().getReference().child("appointments").child(userid);
+        recRef = FirebaseDatabase.getInstance().getReference().child("recommendations").child(userid);
 
         //keep data synced for offline
         userRef.keepSynced(true);
@@ -132,6 +136,13 @@ public class PatientHomeActivity extends AppCompatActivity
         appointmentRecyclerAdapter=new AppointmentRecyclerAdapter(appointmentList);
         appointmentsReclcyerView.setAdapter(appointmentRecyclerAdapter);
 
+        recRecyclerView = (RecyclerView) findViewById(R.id.patientHomeRecList);
+        recRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recList = new ArrayList<>();
+        recommendationAdapter = new RecommendationAdapter(recList);
+        recRecyclerView.setAdapter(recommendationAdapter);
+
 
         appointmentRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -142,6 +153,25 @@ public class PatientHomeActivity extends AppCompatActivity
                     String doctor = d.child("doctor").getValue().toString();
                     appointmentList.add(new Appointment("Dr " + doctor, time, date));
                     appointmentRecyclerAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        recRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    String rec = d.child("rec").getValue().toString();
+                    String date = d.child("date").getValue().toString();
+                    SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+                    String da = sfd.format(new Date(date));
+                    recList.add(new Appointment(rec, "", da));
+                    recommendationAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -189,7 +219,6 @@ public class PatientHomeActivity extends AppCompatActivity
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

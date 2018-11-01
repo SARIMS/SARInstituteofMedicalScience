@@ -179,6 +179,7 @@ public class AddPatientActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             progressDialog.dismiss();
                                             Toast.makeText(AddPatientActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                            finish();
                                         } else {
                                             Toast.makeText(AddPatientActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                             progressDialog.hide();
@@ -204,6 +205,7 @@ public class AddPatientActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             progressDialog.dismiss();
                                             Toast.makeText(AddPatientActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                            finish();
                                         } else {
                                             Toast.makeText(AddPatientActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                             progressDialog.hide();

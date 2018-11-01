@@ -91,4 +91,19 @@
             android:layout_height="wrap_content"
             android:text="Outpatient" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/regPatientLoginPage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="Register"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/patientLoginButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientLoginType" />
 </android.support.constraint.ConstraintLayout>
