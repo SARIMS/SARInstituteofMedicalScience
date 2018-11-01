@@ -2,7 +2,7 @@ package com.example.shreyesh.sarinstituteofmedicalscience;
 
 public class Appointment {
 
-    private String doctorName,appointmentTime,appointmentDate;
+    private String doctorName, appointmentTime, appointmentDate, id;
 
     public Appointment() {
     }
@@ -11,6 +11,21 @@ public class Appointment {
         this.doctorName = doctorName;
         this.appointmentTime = appointmentTime;
         this.appointmentDate = appointmentDate;
+    }
+
+    public Appointment(String doctorName, String appointmentTime, String appointmentDate, String id) {
+        this.doctorName = doctorName;
+        this.appointmentTime = appointmentTime;
+        this.appointmentDate = appointmentDate;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDoctorName() {

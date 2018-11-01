@@ -151,7 +151,7 @@ public class PatientHomeActivity extends AppCompatActivity
                     String date = d.child("date").getValue().toString();
                     String time = d.child("time").getValue().toString();
                     String doctor = d.child("doctor").getValue().toString();
-                    appointmentList.add(new Appointment("Dr " + doctor, time, date));
+                    appointmentList.add(new Appointment("Dr " + doctor, time, date, d.getKey()));
                     appointmentRecyclerAdapter.notifyDataSetChanged();
                 }
             }
